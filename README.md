@@ -1,6 +1,16 @@
 # SAE-BUT2
 
+Exemple structe pour les pages
 src/
-    lib     = les fichiers .js
-    routes  = les fichiers .svelte
-    static  = les fichiers fixes (images, composants, etc...)
+    route/
+        nom-page/
+            +page.svelte
+        widget/
+            +page.svelte
+        compte/
+            +page.svelte
+        +page.svelte (page d'accueil / par défaut)
+        +layout.svelte (  <header />  |  <slot /> (contenu des pages qui l'appel)  |  <footer />  )
+        
+            
+    
