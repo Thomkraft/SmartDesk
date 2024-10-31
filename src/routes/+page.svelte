@@ -1,20 +1,7 @@
 <script>
-    let active = true;
 </script>
 
-
-
-{#if active}
-    <h1>Coucou</h1>
-{:else}
-    <h1>Salut</h1>
-{/if}
-
-<form
-    on:submit|preventDefault={() => {
-        active = !active;
-    }}
->
-    <input type="text" name="todo" id="todo"/>
-    <button>+</button>
-</form>
+<div class="container mx-auto p-4">
+    <h1 class="text-3xl font-bold text-center my-8">Bienvenue sur la page d'accueil</h1>
+    <p class="text-center text-gray-700">Ceci est le contenu de la page d'accueil.</p>
+</div>
