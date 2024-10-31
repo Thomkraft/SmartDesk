@@ -1,3 +1,7 @@
-<h1>Welcome to your library project</h1>
-<p>Create your package using @sveltejs/package and preview/showcase your work with SvelteKit</p>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<script>
+</script>
+
+<div class="container mx-auto p-4">
+    <h1 class="text-3xl font-bold text-center my-8">Bienvenue sur la page d'accueil</h1>
+    <p class="text-center text-gray-700">Ceci est le contenu de la page d'accueil.</p>
+</div>
