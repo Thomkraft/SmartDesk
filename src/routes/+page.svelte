@@ -1,3 +1,20 @@
-<h1>Welcome to your library project</h1>
-<p>Create your package using @sveltejs/package and preview/showcase your work with SvelteKit</p>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<script>
+    let active = true;
+</script>
+
+
+
+{#if active}
+    <h1>Coucou</h1>
+{:else}
+    <h1>Salut</h1>
+{/if}
+
+<form
+    on:submit|preventDefault={() => {
+        active = !active;
+    }}
+>
+    <input type="text" name="todo" id="todo"/>
+    <button>+</button>
+</form>
