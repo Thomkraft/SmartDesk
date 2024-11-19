@@ -1,5 +1,10 @@
 <script>
-    let connected = false;
+    import { goto } from "$app/navigation";
+    import { writable } from "svelte/store";
+    import { isConnected } from "$lib/store.js";
+    import { on } from "svelte/events";
+
+    let connected = isConnected;
     let favorites = [];
     let editIndex = null;
     let editFavoriteName = "";
@@ -109,6 +114,21 @@
         openAddFavoriteModal();
         showContextMenu = false;
     }
+
+    const goToConnection = () => {
+        goto ('/page-connection/connection/');
+    };
+
+    const goToRegister = () => {
+        goto ('/page-connection/register/');
+    };
+
+    function disconectionVerif () {
+        if (confirm("Etes vous sur de vouloir vous déconnecter ?")) {
+            isConnected.set(false);
+            goto ('/');
+        }
+    }
 </script>
 
 <header>
@@ -141,16 +161,34 @@
                     >
                 </li>
             </ul>
-            <button
+
+            {#if $isConnected}
+                <button
                     class="text-sm px-4 py-2 rounded bg-teal-500 hover:bg-teal-600 text-white transition duration-200"
-                    on:click={() => (connected = !connected)}
-            >
-                {#if connected}
+                    on:click={disconectionVerif}
+                    >
+
                     Se déconnecter
-                {:else}
+                </button>
+            {:else}
+                <button
+                    class="text-sm px-4 py-2 rounded bg-teal-500 hover:bg-teal-600 text-white transition duration-200"
+                    on:click={goToConnection}
+                    >
+
                     Se connecter
-                {/if}
-            </button>
+
+                </button>
+            {/if}
+            
+            {#if !$isConnected}
+                <button
+                        class="text-sm px-4 py-2 rounded bg-teal-500 hover:bg-teal-600 text-white transition duration-200"
+                        on:click={goToRegister}
+                >
+                    S'inscrire
+                </button>
+            {/if}
         </div>
     </nav>
 
