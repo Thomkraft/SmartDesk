@@ -41,6 +41,8 @@
         widgets = widgets.map((widget) =>
             widget.id === id ? { ...widget, template: newContent } : widget,
         );
+        isEditing = false;
+        widgetToEdit = null;
         hideContextMenu();
     }
 
@@ -55,12 +57,28 @@
         hideContextMenu();
     }
 
-    function closeEditModal() {
+    function handleSave(id, newContent) {
+        editWidget(id, newContent);
+    }
+
+    function handleCancel() {
         isEditing = false;
         widgetToEdit = null;
     }
 
-    window.addEventListener('hideContextMenu', hideContextMenu);
+    function handleClickOutside(event) {
+        if (isEditing && !event.target.closest('.widget-container')) {
+            handleCancel();
+        }
+    }
+
+    document.addEventListener('click', handleClickOutside);
+
+    $: {
+        if (!isEditing) {
+            document.removeEventListener('click', handleClickOutside);
+        }
+    }
 </script>
 
 <div
@@ -89,6 +107,8 @@
                 onContextMenu={showContextMenu}
                 isEditing={isEditing && widgetToEdit && widgetToEdit.id === widget.id}
                 bind:widgetToEdit={widgetToEdit}
+                onSave={handleSave}
+                onCancel={handleCancel}
             />
         {/each}
     </div>
@@ -98,7 +118,7 @@
             class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50"
         >
             <div
-                class="bg-white p-8 rounded shadow-lg flex flex-col items-center justify-center w-72 h-72"
+                class="bg-white p-8 rounded shadow-lg flex flex-col items-center justify-center w-100 h-100 underline"
             >
                 <h2 class="text-2xl mb-4">
                     Sélectionnez un template de widget
