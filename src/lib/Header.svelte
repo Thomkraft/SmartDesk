@@ -178,10 +178,6 @@
                     >
 
                     Se connecter
-
-                {/if}
-            </button>
-
                 </button>
             {/if}
             
