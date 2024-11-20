@@ -3,6 +3,28 @@ const isWeekend = day => {
     return day % 7 === 0 || day % 7 === 6;
 }
 
+const isCurrentDay = (day) => {
+    const todayDate = new Date(Date.now());
+
+    console.log(
+        'today\n' +
+        todayDate.getDate() + todayDate.getMonth() + todayDate.getFullYear() +
+        '\nday\n' +
+        day.getDate() + day.getMonth() + day.getFullYear()
+    );
+
+    return todayDate.getDate() === day.getDate() &&
+        todayDate.getMonth() === day.getMonth() &&
+        todayDate.getFullYear() === day.getFullYear();
+
+}
+
+const getMonthName = (currentDate) => {
+    const date = currentDate;
+    const options = {month: "long"};
+    return new Intl.DateTimeFormat("en-US", options).format(date);
+}
+
 const getDayName = day => {
     const date = new Date(Date.UTC(2024, 0, day));
     const options = {weekday: "short"};
@@ -10,4 +32,4 @@ const getDayName = day => {
 }
 
 // Export all functions
-export {isWeekend, getDayName};
+export {isCurrentDay, isWeekend, getDayName, getMonthName};

@@ -4,9 +4,15 @@
     import Footer from "$lib/Footer.svelte";
 </script>
 
-<Header />
+<header class="h-1/5">
+    <Header />
+</header>
 
-<slot />
+<main>
+    <slot />
+</main>
 
-<Footer />
+<footer class="bg-gray-900 p-5">
+    <Footer />
+</footer>
 
