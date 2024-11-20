@@ -4,15 +4,19 @@
     import Footer from "$lib/Footer.svelte";
 </script>
 
-<header class="h-1/5">
-    <Header />
-</header>
+<div class="flex flex-col h-screen">
 
-<main>
-    <slot />
-</main>
+    <header>
+        <Header />
+    </header>
 
-<footer class="bg-gray-900 p-5">
-    <Footer />
-</footer>
+    <main class="flex-grow">
+        <slot />
+    </main>
+
+    <footer class="bg-gray-900 p-5">
+        <Footer />
+    </footer>
+
+</div>
 

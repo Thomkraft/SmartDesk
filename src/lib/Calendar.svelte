@@ -61,7 +61,7 @@
         // Update the calendar when select next or previous month
         function updateCalendar() {
             // Update month name
-            labMonth.textContent = getMonthName(currentDate);
+            labMonth.textContent = getMonthName(currentDate) + ", " + currentDate.getFullYear();
 
             // Clear calendar
             calendar.innerHTML = "";
@@ -114,7 +114,7 @@
                     `<div class="
                     day
                     ${weekend ? "text-blue-400" : ""}
-                    flex justify-center text-center pt-2 pb-16 border-r-2 border-b-2 border-gray-300 select-none">
+                    flex justify-center text-center pt-2 pb-14 border-r-2 border-b-2 border-gray-300 select-none">
                         <p class="${currentDay ? "px-1 bg-teal-400 rounded-xl" : ""}">${dayNumber}</p>
                     </div>`
                 );
@@ -133,14 +133,14 @@
     });
 </script>
 
-<div class="bg-gray-100">
+<div class="bg-gray-50">
     <div id="calendar-nav" class="grid grid-cols-7 items-center py-4">
         <div class="col-start-1 text-center">
             <input type="button" id="today-month"
                    class="border border-gray-800 rounded-md text-left px-3 py-1" value="Today" />
         </div>
 
-        <p id="lab-month" class="col-start-4 text-center">Month</p>
+        <p id="lab-month" class="col-start-3 col-end-6 text-center">Month</p>
 
         <div class="col-start-7 text-center">
             <input type="button" id="prev-month" value="<"

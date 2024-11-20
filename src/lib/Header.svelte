@@ -132,12 +132,12 @@
 </script>
 
 <!-- Menu -->
-<nav class="bg-gray-800 px-5 py-4 shadow-md">
+<nav class="bg-gray-800 px-5 py-3 shadow-md">
     <div class="items-center flex">
         <div class="text-teal-400 text-xl font-semibold w-1/3 text-left">
             <a href="/">SmartDesk</a>
         </div>
-        <ul class="flex text-white text-sm font-medium w-1/3 text-center justify-center gap-7">
+        <ul class="flex text-white text-xs font-medium w-1/3 text-center justify-center gap-7">
             <li>
                 <a
                         href="/"
@@ -165,7 +165,7 @@
 
             {#if $isConnected}
                 <button
-                    class="text-sm px-4 py-2 rounded bg-teal-500 hover:bg-teal-600 text-white transition duration-200"
+                    class="text-sm px-3 py-1 rounded bg-teal-500 hover:bg-teal-600 text-white transition duration-200"
                     on:click={disconectionVerif}
                     >
 
@@ -173,20 +173,20 @@
                 </button>
             {:else}
                 <button
-                    class="text-sm px-4 py-2 rounded bg-teal-500 hover:bg-teal-600 text-white transition duration-200"
+                    class="text-sm px-3 py-1 rounded bg-teal-500 hover:bg-teal-600 text-white transition duration-200"
                     on:click={goToConnection}
                     >
 
-                    Se connecter
+                    Login
                 </button>
             {/if}
             
             {#if !$isConnected}
                 <button
-                        class="text-sm px-4 py-2 rounded bg-teal-500 hover:bg-teal-600 text-white transition duration-200"
+                        class="text-sm px-3 py-1 rounded bg-teal-500 hover:bg-teal-600 text-white transition duration-200"
                         on:click={goToRegister}
                 >
-                    S'inscrire
+                    Sign in
                 </button>
             {/if}
 
@@ -196,12 +196,12 @@
 </nav>
 
 <!-- Favorites -->
-<div class="bg-gray-700 px-5 shadow-md">
-    <div class="container mx-auto flex items-center space-x-4">
+<div class="bg-gray-700 px-5 py-0.5 shadow-md">
+    <div class="container flex items-center space-x-3">
         {#each favorites as favorite, index}
             <a
                     href={favorite.url}
-                    class="text-gray-200 hover:text-teal-200 transition duration-200 px-2 py-1 rounded hover:bg-gray-600"
+                    class="text-gray-200 hover:text-teal-200 text-sm transition duration-200 px-2 rounded-md hover:bg-gray-600"
                     on:contextmenu={(e) => openContextMenu(e, index)}
             >
                 {favorite.name}
@@ -209,7 +209,7 @@
         {/each}
         <button
                 on:click={openAddFavoriteModal}
-                class="text-gray-200 hover:text-teal-200 transition duration-200 px-2 py-1 rounded hover:bg-gray-600"
+                class="text-gray-200 hover:text-teal-200 transition duration-200 rounded px-1 hover:bg-gray-600"
         >
             +
         </button>
