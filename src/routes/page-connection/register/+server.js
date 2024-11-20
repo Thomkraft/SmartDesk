@@ -1,0 +1,44 @@
+import mysql from 'mysql2/promise';
+import bcrypt from 'bcrypt';
+
+export async function POST({ request }) {
+    const { email_utilisateur, mdp_utilisateur, nom_utilisateur } = await request.json();
+
+    try {
+        
+        // Connexion à la base de données
+        const db = await mysql.createConnection({
+            host: '85.215.130.37',
+            user: 'SAE2',
+            password: 'Zao@67.pomme', 
+            database: 'smartdesk',    
+            connectTimeout: 5000
+        });
+
+        // Vérifie si l'email existe déjà
+        const [rows] = await db.query('SELECT * FROM utilisateur WHERE email_utilisateur = ?', [email_utilisateur]);
+        if (rows.length > 0) {
+            await db.end();
+            return new Response(JSON.stringify({ message: 'Cet email est déjà utilisé.' }), { status: 400 });
+        }
+
+        // Hachage du mot de passe
+        const hashedPassword = await bcrypt.hash(mdp_utilisateur, 10);
+
+        // Insère l'utilisateur dans la base de données
+        await db.query(
+            'INSERT INTO utilisateur (email_utilisateur, mdp_utilisateur, nom_utilisateur) VALUES (?, ?, ?)',
+            [email_utilisateur, hashedPassword, nom_utilisateur]
+        );
+
+        await db.end();
+        return new Response(JSON.stringify({ message: 'Utilisateur créé avec succès.' }), { status: 201 });
+        
+    } catch (error) {
+        console.error(error);
+
+        alert("Erreur serveur");
+
+        return new Response(JSON.stringify({ message: 'Erreur serveur.' }), { status: 500 });
+    }
+}
