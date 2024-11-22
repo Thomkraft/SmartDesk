@@ -1,0 +1,39 @@
+name: Déployer l'application SvelteKit
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Vérification du code source
+        uses: actions/checkout@v3
+
+      - name: Configuration de l'agent SSH
+        uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Transfert du projet vers le VPS
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "rm -rf ${{ secrets.VPS_DIR }} && mkdir -p ${{ secrets.VPS_DIR }}"
+          scp -r ./* ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:${{ secrets.VPS_DIR }}
+
+      - name: Installation des dépendances
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "cd ${{ secrets.VPS_DIR }} && npm install"
+
+      - name: Construction de l'application
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "cd ${{ secrets.VPS_DIR }} && npm run build"
+
+      - name: Lancement de l'application
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "pm2 restart sveltekit-app || pm2 start build/index.js --name sveltekit-app"
+
+      - name: Confirmation du déploiement
+        run: echo "Déploiement terminé"
