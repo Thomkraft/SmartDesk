@@ -3,7 +3,7 @@
 	"version": "0.0.1",
 	"scripts": {
 		"dev": "vite dev",
-		"build": "vite build && npm run package",
+		"build": "vite build",
 		"preview": "vite preview",
 		"package": "svelte-kit sync && svelte-package && publint",
 		"prepublishOnly": "npm run package"
@@ -29,8 +29,7 @@
 		"svelte": "^5.0.0"
 	},
 	"devDependencies": {
-		"@sveltejs/adapter-auto": "^3.0.0",
-		"@sveltejs/kit": "^2.0.0",
+		"@sveltejs/adapter-node": "^3.0.0",
 		"@sveltejs/package": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^4.0.0",
 		"autoprefixer": "^10.4.20",
@@ -41,6 +40,7 @@
 		"vite": "^5.0.11"
 	},
 	"dependencies": {
+		"@sveltejs/kit": "^2.0.0",
 		"nodemailer": "^6.6.3",
 		"axios": "^1.7.7",
 		"bcrypt": "^5.1.1",
