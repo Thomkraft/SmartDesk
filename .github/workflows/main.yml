@@ -33,7 +33,7 @@ jobs:
 
       - name: Lancement de l'application
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "pm2 restart sveltekit-app || pm2 start build/index.js --name sveltekit-app"
+          ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "cd ${{ secrets.VPS_DIR }} && pm2 restart smartdesk || pm2 start ${{ secrets.VPS_DIR }}/build/index.js --name smartdesk"
 
       - name: Confirmation du déploiement
         run: echo "Déploiement terminé"
