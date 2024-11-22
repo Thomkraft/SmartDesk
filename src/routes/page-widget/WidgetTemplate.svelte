@@ -1,18 +1,28 @@
 <script>
     export let widget;
-    export let isEditing = false;
+    export let isEditing;
+    export let widgetToEdit;
     export let onEdit;
+    export let onDelete;
     export let onContextMenu;
-    export let closeEditModal;
-    let newContent = widget.template;
+    export let onSave;
+    export let onCancel;
 
-    function handleSave() {
-        onEdit(widget.id, newContent);
-        closeEditModal();
+    let newContent = widget.template;
+    let originalContent = widget.template;
+
+    $: if (isEditing && widgetToEdit && widgetToEdit.id === widget.id) {
+        newContent = widgetToEdit.template;
+        originalContent = widgetToEdit.template;
     }
 
-    function applyStyle(command, value = null) {
-        document.execCommand(command, false, value);
+    function applyStyle(style, value) {
+        document.execCommand(style, false, value);
+    }
+
+    function handleCancel() {
+        newContent = originalContent;
+        onCancel();
     }
 </script>
 
@@ -29,18 +39,13 @@
             <div contenteditable="true" bind:innerHTML={newContent} class="flex-grow w-full" on:input={(e) => newContent = e.target.innerHTML}></div>
             <div class="flex justify-end items-center mt-2">
                 <div class="toolbar flex space-x-2">
-                    <button class="bg-gray-200 p-2 rounded" title="Bold" on:click={() => applyStyle('bold')}>B</button>
-                    <button class="bg-gray-200 p-2 rounded" title="Italic" on:click={() => applyStyle('italic')}>I</button>
-                    <button class="bg-gray-200 p-2 rounded" title="Underline" on:click={() => applyStyle('underline')}>U</button>
-                    <button class="bg-gray-200 p-2 rounded" title="Font Size" on:click={() => applyStyle('fontSize', '4')}>A+</button>
+                    <button class="bg-gray-200 p-2 rounded" title="Bold" on:click={() => applyStyle('bold')}>Bold</button>
+                    <button class="bg-gray-200 p-2 rounded" title="Italic" on:click={() => applyStyle('italic')}>Italic</button>
                     <button class="bg-gray-200 p-2 rounded" title="Font Color" on:click={() => applyStyle('foreColor', 'red')}>Color</button>
-                    <button class="bg-gray-200 p-2 rounded" title="Bullet List" on:click={() => applyStyle('insertUnorderedList')}>• List</button>
-                    <button class="bg-gray-200 p-2 rounded" title="Numbered List" on:click={() => applyStyle('insertOrderedList')}>1. List</button>
-                    <button class="bg-gray-200 p-2 rounded" title="Checklist" on:click={() => applyStyle('insertCheckbox')}>☑ Checklist</button>
                 </div>
                 <div class="flex space-x-2 ml-4">
-                    <button on:click={handleSave} class="bg-blue-500 text-white px-4 py-2 rounded">Save</button>
-                    <button on:click={closeEditModal} class="bg-red-500 text-white px-4 py-2 rounded">Cancel</button>
+                    <button class="bg-blue-500 text-white px-4 py-2 rounded" on:click={() => onSave(widgetToEdit.id, newContent)}>Save</button>
+                    <button class="bg-red-500 text-white px-4 py-2 rounded" on:click={handleCancel}>Cancel</button>
                 </div>
             </div>
         </div>
@@ -53,11 +58,7 @@
 
 <style>
     .widget-container {
-        width: 400px; /* Fixed width */
-        height: 600px; /* Fixed height */
-    }
-    .toolbar button {
-        min-width: 32px;
-        min-height: 32px;
+        width: 400px;
+        height: 600px;
     }
 </style>
