@@ -113,9 +113,9 @@
                     "beforeend",
                     `<div class="
                     day
-                    ${weekend ? "text-blue-400" : ""}
-                    flex justify-center text-center pt-2 pb-14 border-r-2 border-b-2 border-gray-300 select-none">
-                        <p class="${currentDay ? "px-1 bg-teal-400 rounded-xl" : ""}">${dayNumber}</p>
+                    ${weekend ? `${currentDay ? 'text-blue-700' : ' text-blue-400'}` : ""}
+                    flex justify-center text-center pt-2 pb-2 border-r-2 border-b-2 border-gray-300 select-none">
+                        <p class="${currentDay ? " self-start px-2 py-1 bg-teal-400 rounded-full" : "px-2 py-1"}">${dayNumber}</p>
                     </div>`
                 );
             }
@@ -133,7 +133,7 @@
     });
 </script>
 
-<div class="bg-gray-50">
+<div class="bg-gray-50 h-full flex flex-col">
     <div id="calendar-nav" class="grid grid-cols-7 items-center py-4">
         <div class="col-start-1 text-center">
             <input type="button" id="today-month"
@@ -154,6 +154,6 @@
 
     <div id="days-name" class="grid grid-cols-7"></div>
 
-    <div id="calendar" class="grid grid-cols-7"></div>
+    <div id="calendar" class="grid grid-cols-7 flex-grow"></div>
 
 </div>

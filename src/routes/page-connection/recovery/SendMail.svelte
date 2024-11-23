@@ -13,7 +13,6 @@
         });
 
         repbody = await response.json();
-        console.log(repbody.message);
         if (response.status === 201) {
             rep = 0;
         } else {
@@ -22,7 +21,7 @@
     };
 </script>
 
-<main class="flex items-center justify-center min-h-96 bg-gray-100">
+<div class="flex items-center justify-center min-h-96 h-full bg-gray-100">
     <div class="bg-white p-8 rounded shadow-md w-full max-w-md">
         <h1 class="text-2xl font-bold mb-6">Récuperation de compte</h1>
         {#if rep === 0}
@@ -39,8 +38,7 @@
 
         <form on:submit|preventDefault={handleSubmit}>
             <div class="mb-4">
-                <label for="email" class="block text-gray-700"
-                >
+                <label for="email" class="block text-gray-700">
                     Adresse mail
                 </label>
                 <input
@@ -54,9 +52,8 @@
             <button
                 type="submit"
                 class="w-full bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            >
-                Continuer
+                >Continuer
             </button>
         </form>
     </div>
-</main>
+</div>

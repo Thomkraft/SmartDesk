@@ -32,13 +32,9 @@ export async function POST({ request }) {
         );
 
         await db.end();
-        return new Response(JSON.stringify({ message: 'Utilisateur créé avec succès.' }), { status: 201 });
+        return new Response(JSON.stringify({ message: 'Utilisateur créé avec succès. Redirection...' }), { status: 201 });
         
     } catch (error) {
-        console.error(error);
-
-        alert("Erreur serveur");
-
         return new Response(JSON.stringify({ message: 'Erreur serveur.' }), { status: 500 });
     }
 }

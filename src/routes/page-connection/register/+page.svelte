@@ -1,93 +1,105 @@
 <script>
-    import { goto } from '$app/navigation';
-    import { onMount } from 'svelte';
-    let nom_utilisateur = '';
-    let email_utilisateur = '';
-    let mdp_utilisateur = '';
-    let message = '';
+    import { goto } from "$app/navigation";
+    import { onMount } from "svelte";
+    let nom_utilisateur = "";
+    let email_utilisateur = "";
+    let mdp_utilisateur = "";
+    let rep = -1;
+    let repbody = "";
+
+    const sleep = (time) => new Promise(resolve => setTimeout(resolve, time))
+
 
     // Fonction pour gérer la soumission du formulaire
     async function handleRegister(event) {
         event.preventDefault();
 
         // Appelle l'API avec les données utilisateur
-        const response = await fetch('/page-connection/register/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ nom_utilisateur, email_utilisateur, mdp_utilisateur })
+        const response = await fetch("/page-connection/register/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                nom_utilisateur,
+                email_utilisateur,
+                mdp_utilisateur,
+            }),
         });
 
-        const data = await response.json();
+        repbody = await response.json();
 
-        if (response.ok) {
-            message = 'Utilisateur créé avec succès.';
-            alert(message);
-            goto('/page-connection/connection/');
-            
+        if (response.status === 201) {
+            rep = 0;
+            window.setTimeout(() => {
+                goto("/page-connection/connection/");
+            }, 3000);
         } else {
-            alert(data.message);
-            message = data.message;
+            rep = 1;
         }
     }
-
-
 </script>
 
-<style>
-    h1 {
-        text-align: center;
-    }
-
-    form {
-        max-width: 400px;
-        margin: 0 auto;
-        display: flex;
-        flex-direction: column;
-    }
-    input {
-        margin: 10px 0;
-        padding: 10px;
-        font-size: 16px;
-        border: solid 1px #ced4da;
-    }
-    button {
-        padding: 10px;
-        font-size: 16px;
-        background-color: #007BFF;
-        color: white;
-        border: none;
-        cursor: pointer;
-    }
-    button:hover {
-        background-color: #0056b3;
-    }
-    .message {
-        margin-top: 10px;
-        font-weight: bold;
-    }
-</style>
-
-<h1>Inscription</h1>
-<form on:submit={handleRegister}>
-    <input
-        type="text"
-        bind:value={nom_utilisateur}
-        placeholder="Nom d'utilisateur"
-        required
-    />
-    <input
-        type="email"
-        bind:value={email_utilisateur}
-        placeholder="Email"
-        required
-    />
-    <input
-        type="password"
-        bind:value={mdp_utilisateur}
-        placeholder="Mot de passe"
-        required
-    />
-    <button type="submit">S'inscrire</button>
-</form>
-
-<p class="message">{message}</p>
+<div class="flex items-center justify-center min-h-96 h-full bg-gray-100">
+    <div class="w-full max-w-md p-8 space-y-6 bg-white rounded shadow-md">
+        <h2 class="text-2xl font-bold text-center">Inscription</h2>
+        {#if rep === 0}
+            <p
+                class="bg-green-500 py-2 px-4 rounded text-white mb-4 text-center"
+            >
+                {repbody.message}
+            </p>
+        {:else if rep === 1}
+            <p class="bg-red-500 py-2 px-4 rounded text-white mb-4 text-center">
+                {repbody.message}
+            </p>
+        {/if}
+        <form on:submit={handleRegister} class="space-y-4">
+            <div>
+                <label
+                    for="username"
+                    class="block text-sm font-medium text-gray-700"
+                    >Nom d'utilisateur</label
+                >
+                <input
+                    type="text"
+                    id="username"
+                    bind:value={nom_utilisateur}
+                    class="w-full px-3 py-2 mt-1 border rounded-md focus:outline-none focus:ring focus:ring-indigo-200"
+                    required
+                />
+            </div>
+            <div>
+                <label
+                    for="mail"
+                    class="block text-sm font-medium text-gray-700"
+                    >Email</label
+                >
+                <input
+                    type="email"
+                    id="email"
+                    bind:value={email_utilisateur}
+                    class="w-full px-3 py-2 mt-1 border rounded-md focus:outline-none focus:ring focus:ring-indigo-200"
+                    required
+                />
+            </div>
+            <div>
+                <label
+                    for="password"
+                    class="block text-sm font-medium text-gray-700"
+                    >Mot de passe</label
+                >
+                <input
+                    type="password"
+                    id="password"
+                    bind:value={mdp_utilisateur}
+                    class="w-full px-3 py-2 mt-1 border rounded-md focus:outline-none focus:ring focus:ring-indigo-200"
+                    required
+                />
+            </div>
+            <button
+                type="submit"
+                class="w-full px-4 py-2 font-bold text-white bg-red-700 rounded hover:bg-red-800 focus:outline-none focus:ring focus:ring-indigo-200"
+                >S'inscrire</button
+            >
+        </form>
+    </div>
+</div>

@@ -17,7 +17,6 @@ export async function POST({ request }) {
 
         // Vérifie si l'email existe
         const [rows] = await db.query('SELECT * FROM utilisateur WHERE email_utilisateur = ?', [email_utilisateur]);
-        console.log("oui");
         if (rows.length > 0) {
             
             // Récupération du mdp en BD
@@ -33,10 +32,10 @@ export async function POST({ request }) {
 
 
                 await db.end();
-                return new Response(JSON.stringify({ message: 'Connecté !' }), { status: 201 });
+                return new Response(JSON.stringify({ message: 'Connecté ! Redirection...' }), { status: 201 });
             } else {
                 await db.end();
-                return new Response(JSON.stringify({ message: 'MDP Incorrect' }), { status: 400 });
+                return new Response(JSON.stringify({ message: 'Mot de passe incorrect' }), { status: 400 });
             }
             
         } else {
@@ -46,7 +45,6 @@ export async function POST({ request }) {
         }
 
     } catch (error) {
-        console.error(error);
         return new Response(JSON.stringify({ message: 'Erreur serveur.' }), { status: 500 });
     }
 }

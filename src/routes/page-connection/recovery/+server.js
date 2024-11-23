@@ -16,7 +16,7 @@ export async function POST({ request }) {
     });
 
     //mettre la bonne url
-    let url = 'http://localhost:5173/page-connection/recovery';
+    const url = 'http://85.215.130.37:3000/page-connection/recovery';
 
     if (token && password) {
 
@@ -56,41 +56,47 @@ export async function POST({ request }) {
             return new Response(JSON.stringify({ message: 'L\'adresse mail n\'existe pas dans la base' }), { status: 404 });
         }
 
-        const token = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-        const now = new Date();
-        const expirationDate = new Date(now.getTime() + 3600000);
+        const [rows2] = await db.query('SELECT * FROM changement_mdp WHERE email_utilisateur = ? AND utilise = ? AND date_expiration > ?', [email, false, new Date()]);
+        if (rows2.length > 0) {
+            await db.end();
+            return new Response(JSON.stringify({ message: 'Un mail de récupération vous a déjà été envoyé' }), { status: 400 });
+        } else {
+            const token = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+            const now = new Date();
+            const expirationDate = new Date(now.getTime() + 3600000);
 
-        await db.query('INSERT INTO changement_mdp (email_utilisateur, token, date_creation, date_expiration, utilise) VALUES (?, ?, ?, ?, ?)', 
-            [email, token, now, expirationDate, false]);
-        
-        await db.end();
-        try {
-            let transporter = createTransport({
-                service: 'gmail',
-                auth: {
-                    user: 'tiakin69@gmail.com',
-                    pass: 'gtww iwxp sedl fkuj'
-                }
-            });
-
-
-            let mailOptions = {
-                from: '"SmartDesk" <tiakin69@gmail.com>',
-                to: email,
-                subject: 'Changement de mot de passe',
-                text: 'Cliquez ici pour changer de mot de passe : '+ {url} +'?token=' + token,
-            };
+            await db.query('INSERT INTO changement_mdp (email_utilisateur, token, date_creation, date_expiration, utilise) VALUES (?, ?, ?, ?, ?)', 
+                [email, token, now, expirationDate, false]);
             
-            transporter.sendMail(mailOptions, (error) => {
-                if (error) {
-                    return new Response(JSON.stringify({ message: "Une erreur est survenue" }), { status: 500 });
-                }
-            });
+            await db.end();
+            try {
+                let transporter = createTransport({
+                    service: 'gmail',
+                    auth: {
+                        user: 'tiakin69@gmail.com',
+                        pass: 'ypfb lxpw hzds bnsj'
+                    }
+                });
 
-            return new Response(JSON.stringify({ message: "Un mail de récupération vous a été envoyé" }), { status: 201 });
 
-        } catch (error) {
-            return new Response(JSON.stringify({ message: "Une erreur est survenue" }), { status: 500 });
+                let mailOptions = {
+                    from: '"SmartDesk" <tiakin69@gmail.com>',
+                    to: email,
+                    subject: 'Changement de mot de passe',
+                    text: 'Cliquez ici pour changer de mot de passe : '+ url +'?token=' + token,
+                };
+                
+                transporter.sendMail(mailOptions, (error) => {
+                    if (error) {
+                        return new Response(JSON.stringify({ message: "Une erreur est survenue" }), { status: 500 });
+                    }
+                });
+
+                return new Response(JSON.stringify({ message: "Un mail de récupération vous a été envoyé" }), { status: 201 });
+
+            } catch (error) {
+                return new Response(JSON.stringify({ message: "Une erreur est survenue" }), { status: 500 });
+            }
         }
     }
 }

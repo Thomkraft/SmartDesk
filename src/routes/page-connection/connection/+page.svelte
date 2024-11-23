@@ -4,164 +4,82 @@
     import { goto } from "$app/navigation";
     import { isConnected } from "$lib/store.js";
 
-
     let email_utilisateur = "";
     let mdp_utilisateur = "";
-    let message = "";
+    let rep = -1;
+    let repbody = "";
 
     // Fonction pour gérer la soumission du formulaire
     async function handleSubmit(event) {
         event.preventDefault();
 
         // Appelle l'API avec les données utilisateur
-        const response = await fetch('/page-connection/connection/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email_utilisateur, mdp_utilisateur })
+        const response = await fetch("/page-connection/connection/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email_utilisateur, mdp_utilisateur }),
         });
 
-        const data = await response.json();
+        repbody = await response.json();
 
-        if (response.ok) {
-            message = 'Connecté avec succes.';
-            alert(message);
-
+        if (response.status === 201) {
+            rep = 0;
             isConnected.set(true);
-            
-            goto('../../');
-          
+            window.setTimeout(() => {
+                goto("/");
+            }, 1000);
         } else {
-            
-            message = data.message;
-
-            //
-            //en faire un composant pour eviter la redondance
-            //
-            //Faire un DOM.js dans lib
-            //
-            if (data.message === 'Cet email est lié a aucun compte') {
-
-                const mailInput = document.getElementsByClassName("email")[0];
-                const messagemail = document.createElement('p');
-
-                const messageexist = document.getElementsByClassName('error-mail')[0];
-                if (messageexist) {
-                    messageexist.remove();
-                }
-
-                messagemail.innerHTML = "email lié a aucun compte";
-                messagemail.style.color = 'red';
-                messagemail.classList.add("error-mail");
-
-                mailInput.insertAdjacentElement('afterend', messagemail);
-            }
-
-            if (data.message === 'MDP Incorrect') {
-
-                const passwordinput = document.getElementsByClassName("password")[0];
-                const messagepassword = document.createElement('p');
-
-                const messageexist = document.getElementsByClassName('error-password')[0];
-                if (messageexist) {
-                    messageexist.remove();
-                }
-
-                messagepassword.innerHTML = "mdp incorrect";
-                messagepassword.style.color = 'red';
-                messagepassword.classList.add("error-password");
-
-                passwordinput.insertAdjacentElement('afterend', messagepassword);
-                }
-            alert(message);
-            
+            rep = 1;
         }
     }
-
-
-    // Fonction pour rediriger vers la page doublie de mdp
-    const goToForgotpass = () => {
-        goto('/page-connection/recovery/');
-    };
 </script>
 
-<style>
+<div class="flex items-center justify-center min-h-96 h-full bg-gray-100">
+    <div class="w-full max-w-md p-8 space-y-6 bg-white rounded shadow-md">
+        <h2 class="text-2xl font-bold text-center">Connexion</h2>
+        {#if rep === 0}
+            <p
+                class="bg-green-500 py-2 px-4 rounded text-white mb-4 text-center"
+            >
+                {repbody.message}
+            </p>
+        {:else if rep === 1}
+            <p class="bg-red-500 py-2 px-4 rounded text-white mb-4 text-center">
+                {repbody.message}
+            </p>
+        {/if}
+        <form on:submit|preventDefault={handleSubmit} class="space-y-4">
+            <div>
+                <label
+                        for="email"
+                        class="block text-sm font-medium text-gray-700"
+                        >Adresse mail</label>
+                <input
+                    class="w-full px-3 py-2 mt-1 border rounded-md focus:outline-none focus:ring focus:ring-indigo-200"
+                    type="email"
+                    id="email"
+                    bind:value={email_utilisateur}
+                    required
+                />
+            </div>
+            <div>
+                <label
+                        for="password"
+                        class="block text-sm font-medium text-gray-700"
+                        >Mot de passe</label>
+                <input
+                    class="w-full px-3 py-2 mt-1 border rounded-md focus:outline-none focus:ring focus:ring-indigo-200"
+                    type="password"
+                    id="password"
+                    bind:value={mdp_utilisateur}
+                    required
+                />
+            </div>
+            <button type="submit" class="w-full bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">Se connecter</button>
+        </form>
 
-    h1 {
-        text-align: center;
-    }
-
-    form {
-        display: flex;
-        flex-direction: column;
-        width: 300px;
-        margin: auto;
-        gap: 1rem;
-    }
-    input {
-        padding: 0.5rem;
-        font-size: 1rem;
-        border: solid 1px #ced4da;
-    }
-    button {
-        padding: 0.5rem;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        cursor: pointer;
-    }
-    button:hover {
-        background-color: #0056b3;
-    }
-    .message {
-        text-align: center;
-        margin-top: 1rem;
-    }
-
-    /* Style pour le bouton en haut à droite */
-    
-
-    .forgotpass-button {
-        display: block;
-        top: 1rem;
-        right: 10rem;
-        background-color: #f7074f;
-        color: white;
-        border: none;
-        padding: 0.5rem 1rem;
-        cursor: pointer;
-        border: solid 1px #f7074f;
-
-        margin: auto;
-        margin-top: 1em;
-    }
-
-    .forgotpass-button:hover {
-        background-color: #c50623;
-    }
-        
-</style>
-
-<h1>Connexion</h1>
-
-
-<form on:submit|preventDefault={handleSubmit} class="form-connection">
-    <input class="email"
-        type="email"
-        bind:value={email_utilisateur}
-        placeholder="Email"
-        required
-    />
-    
-    <input class="password"
-        type="password"
-        bind:value={mdp_utilisateur}
-        placeholder="Mot de passe"
-        required
-    />
-    <button type="submit" class="submit">Se connecter</button>
-
-</form>
-
-<button class="forgotpass-button" on:click={goToForgotpass}>MDP oublié</button>
-
-<p class="message">{message}</p>
+        <button class="w-full bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2" on:click={goto("/page-connection/recovery/")}
+            >Mot de passe oublié</button
+        >
+    </div>
+</div>
