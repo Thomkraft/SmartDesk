@@ -2,6 +2,7 @@
     import { dndzone } from "svelte-dnd-action";
     import ContextMenu from "./ContextMenu.svelte";
     import WidgetTemplate from "./WidgetTemplate.svelte";
+    import { onMount } from "svelte";
 
     let showPopup = false;
     let widgets = [];
@@ -72,11 +73,14 @@
         }
     }
 
-    document.addEventListener('click', handleClickOutside);
-
+    onMount(() => {
+        document.addEventListener('click', handleClickOutside);
+    });
     $: {
         if (!isEditing) {
-            document.removeEventListener('click', handleClickOutside);
+            onMount(() => {
+                document.removeEventListener('click', handleClickOutside);
+            });
         }
     }
 </script>
