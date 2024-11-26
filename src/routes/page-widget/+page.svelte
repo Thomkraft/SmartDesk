@@ -83,80 +83,50 @@
             });
         }
     }
+    
 </script>
 
-<div
-    class="container mx-auto p-4"
-    on:click={hideContextMenu}
-    role="presentation"
->
+<div class="container mx-auto p-4" on:click={hideContextMenu} role="presentation">
     <div class="flex justify-between items-center mb-4">
         <h1 class="text-3xl font-bold">Widget list</h1>
-        <button
-            on:click={togglePopup}
-            class="bg-blue-500 text-white px-4 py-2 rounded">Add Widget</button
-        >
+        <button on:click={togglePopup} class="bg-blue-500 text-white px-4 py-2 rounded">Add Widget</button>
     </div>
-    <div
-        class="flex flex-wrap gap-4"
-        use:dndzone={{ items: widgets, flipDurationMs: 0 }}
-        on:consider={handleDndEvent}
-        on:finalize={handleDndEvent}
-    >
+    <div class="flex flex-wrap gap-4" use:dndzone={{ items: widgets, flipDurationMs: 150 }} on:consider={handleDndEvent} on:finalize={handleDndEvent}>
         {#each widgets as widget (widget.id)}
-            <WidgetTemplate
-                {widget}
-                onEdit={editWidget}
-                onDelete={deleteWidget}
-                onContextMenu={showContextMenu}
-                isEditing={isEditing && widgetToEdit && widgetToEdit.id === widget.id}
-                bind:widgetToEdit={widgetToEdit}
-                onSave={handleSave}
-                onCancel={handleCancel}
-            />
+            <div class="widget-container">
+                <WidgetTemplate
+                    {widget}
+                    onEdit={editWidget}
+                    onDelete={deleteWidget}
+                    onContextMenu={showContextMenu}
+                    isEditing={isEditing && widgetToEdit && widgetToEdit.id === widget.id}
+                    bind:widgetToEdit={widgetToEdit}
+                    onSave={handleSave}
+                    onCancel={handleCancel}
+                />
+            </div>
         {/each}
     </div>
 
+    {#if widgets.length === 0}
+        <div class="w-full text-center text-gray-500 mt-8">
+            No widgets created yet. Click "Add Widget" to get started.
+        </div>
+    {/if}
+
     {#if showPopup}
-        <div
-            class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50"
-        >
-            <div
-                class="bg-white p-8 rounded shadow-lg flex flex-col items-center justify-center w-100 h-100 underline"
-            >
-                <h2 class="text-2xl mb-4">
-                    Sélectionnez un template de widget
-                </h2>
-                <button
-                    on:click={() => addWidget("note")}
-                    class="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
-                    >Bloc Notes</button
-                >
-                <button
-                    on:click={() => addWidget("timer")}
-                    class="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
-                    >Timer</button
-                >
-                <button
-                    on:click={() => addWidget("spotify")}
-                    class="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
-                    >Lecteur Spotify</button
-                >
-                <button
-                    on:click={togglePopup}
-                    class="mt-4 bg-red-500 text-white px-4 py-2 rounded"
-                    >Fermer</button
-                >
+        <div class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
+            <div class="bg-white p-8 rounded shadow-lg flex flex-col items-center justify-center w-full max-w-md">
+                <h2 class="text-2xl mb-4">Select a widget template</h2>
+                <button on:click={() => addWidget("note")} class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Note</button>
+                <button on:click={() => addWidget("timer")} class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Timer</button>
+                <button on:click={() => addWidget("spotify")} class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Spotify Player</button>
+                <button on:click={togglePopup} class="mt-4 bg-red-500 text-white px-4 py-2 rounded">Close</button>
             </div>
         </div>
     {/if}
 
     {#if contextMenuVisible}
-        <ContextMenu
-            position={contextMenuPosition}
-            onEdit={startEditing}
-            onDelete={deleteWidget}
-            widgetId={selectedWidgetId}
-        />
+        <ContextMenu position={contextMenuPosition} onEdit={startEditing} onDelete={deleteWidget} widgetId={selectedWidgetId} />
     {/if}
 </div>

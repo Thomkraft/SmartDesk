@@ -27,7 +27,7 @@
 </script>
 
 <div
-    class="widget-container border border-gray-300 p-4 shadow-md bg-white flex flex-col justify-between w-96 h-128"
+    class="widget-container border border-gray-300 p-4 bg-gray-800 shadow-[0_-1px_1px_0_rgba(0,255,255,1),1px_0_1px_0_rgba(0,255,255,1)] flex flex-col justify-between w-96 h-128"
     role="region"
     on:contextmenu={(event) => {
         event.preventDefault();
@@ -36,7 +36,7 @@
 >
     {#if isEditing}
         <div class="flex flex-col h-full">
-            <div contenteditable="true" bind:innerHTML={newContent} class="flex-grow w-full" on:input={(e) => newContent = e.target.innerHTML}></div>
+            <div contenteditable="true" bind:innerHTML={newContent} class="flex-grow w-full text-white" on:input={(e) => newContent = e.target.innerHTML}></div>
             <div class="flex justify-end items-center mt-2">
                 <div class="toolbar flex space-x-2">
                     <button class="bg-gray-200 p-2 rounded" title="Bold" on:click={() => applyStyle('bold')}>Bold</button>
@@ -50,12 +50,11 @@
             </div>
         </div>
     {:else}
-        <div class="widget-content flex-grow overflow-y-auto">
+        <div class="widget-content flex-grow overflow-y-auto text-white">
             {@html widget.template}
         </div>
     {/if}
 </div>
-
 <style>
     .widget-container {
         width: 400px;
