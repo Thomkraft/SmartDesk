@@ -27,7 +27,7 @@
 </script>
 
 <div
-    class="widget-container border border-gray-300 p-4 bg-gray-800 shadow-[0_-4px_3px_0_rgba(0,255,255,1),4px_0_3px_0_rgba(0,255,255,1)] flex flex-col justify-between w-96 h-128"
+    class="widget-container border border-gray-300 p-4 bg-gray-800 shadow-[0_-1px_1px_0_rgba(0,255,255,1),1px_0_1px_0_rgba(0,255,255,1)] flex flex-col justify-between w-96 h-128"
     role="region"
     on:contextmenu={(event) => {
         event.preventDefault();
