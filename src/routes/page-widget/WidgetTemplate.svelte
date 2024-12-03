@@ -1,4 +1,6 @@
 <script>
+    import NoteWidget from '$lib/NoteWidget.svelte';
+
     export let widget;
     export let isEditing;
     export let widgetToEdit;
@@ -16,13 +18,8 @@
         originalContent = widgetToEdit.template;
     }
 
-    function applyStyle(style, value) {
-        document.execCommand(style, false, value);
-    }
-
-    function handleCancel() {
-        newContent = originalContent;
-        onCancel();
+    function handleSave(content) {
+        onSave(widgetToEdit.id, content);
     }
 </script>
 
@@ -35,20 +32,9 @@
     }}
 >
     {#if isEditing}
-        <div class="flex flex-col h-full">
-            <div contenteditable="true" bind:innerHTML={newContent} class="flex-grow w-full text-white" on:input={(e) => newContent = e.target.innerHTML}></div>
-            <div class="flex justify-end items-center mt-2">
-                <div class="toolbar flex space-x-2">
-                    <button class="bg-gray-200 p-2 rounded" title="Bold" on:click={() => applyStyle('bold')}>Bold</button>
-                    <button class="bg-gray-200 p-2 rounded" title="Italic" on:click={() => applyStyle('italic')}>Italic</button>
-                    <button class="bg-gray-200 p-2 rounded" title="Font Color" on:click={() => applyStyle('foreColor', 'red')}>Color</button>
-                </div>
-                <div class="flex space-x-2 ml-4">
-                    <button class="bg-blue-500 text-white px-4 py-2 rounded" on:click={() => onSave(widgetToEdit.id, newContent)}>Save</button>
-                    <button class="bg-red-500 text-white px-4 py-2 rounded" on:click={handleCancel}>Cancel</button>
-                </div>
-            </div>
-        </div>
+        {#if widget.type === 'note'}
+            <NoteWidget {newContent} onSave={handleSave} onCancel={onCancel} />
+        {/if}
     {:else}
         <div class="widget-content flex-grow overflow-y-auto text-white">
             {@html widget.template}

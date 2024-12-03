@@ -3,6 +3,7 @@
     import ContextMenu from "./ContextMenu.svelte";
     import WidgetTemplate from "./WidgetTemplate.svelte";
     import { onMount } from "svelte";
+    import { isConnected } from "$lib/store.js";
 
     let showPopup = false;
     let widgets = [];
@@ -12,17 +13,42 @@
     let isEditing = false;
     let widgetToEdit = null;
 
-    function togglePopup() {
+    // Use the $ prefix only in reactive statements
+    $: isConnectedValue = $isConnected;
+
+    async function togglePopup() {
         showPopup = !showPopup;
     }
 
-    function addWidget(template) {
-        widgets = [...widgets, { id: widgets.length, template }];
+    async function addWidget(type) {
+        if (!isConnectedValue) {
+            alert("You must be connected to add a widget.");
+            return;
+        }
+        const newWidget = { type, template: "", position: widgets.length, id_utilisateur: 1 };
+        const response = await fetch('/api/widgets', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newWidget)
+        });
+        const result = await response.json();
+        newWidget.id = result.id;
+        widgets = [...widgets, newWidget];
         togglePopup();
     }
 
-    function handleDndEvent({ detail }) {
+    async function handleDndEvent({ detail }) {
         widgets = detail.items;
+        for (const widget of widgets) {
+            if (widget.id.startsWith('id:dnd-shadow-placeholder')) {
+                continue; // Skip placeholder items
+            }
+            await fetch(`/api/widgets/${widget.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(widget)
+            });
+        }
     }
 
     function showContextMenu({ widgetId, event }) {
@@ -38,10 +64,16 @@
         contextMenuVisible = false;
     }
 
-    function editWidget(id, newContent) {
+    async function editWidget(id, newContent) {
         widgets = widgets.map((widget) =>
             widget.id === id ? { ...widget, template: newContent } : widget,
         );
+        const widget = widgets.find(widget => widget.id === id);
+        await fetch(`/api/widgets/${widget.id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(widget)
+        });
         isEditing = false;
         widgetToEdit = null;
         hideContextMenu();
@@ -83,13 +115,14 @@
             });
         }
     }
-    
 </script>
 
 <div class="container mx-auto p-4" on:click={hideContextMenu} role="presentation">
     <div class="flex justify-between items-center mb-4">
         <h1 class="text-3xl font-bold">Widget list</h1>
-        <button on:click={togglePopup} class="bg-blue-500 text-white px-4 py-2 rounded">Add Widget</button>
+        {#if isConnectedValue}
+            <button on:click={togglePopup} class="bg-blue-500 text-white px-4 py-2 rounded">Add Widget</button>
+        {/if}
     </div>
     <div class="flex flex-wrap gap-4" use:dndzone={{ items: widgets, flipDurationMs: 150 }} on:consider={handleDndEvent} on:finalize={handleDndEvent}>
         {#each widgets as widget (widget.id)}
@@ -109,9 +142,15 @@
     </div>
 
     {#if widgets.length === 0}
-        <div class="w-full text-center text-gray-500 mt-8">
-            No widgets created yet. Click "Add Widget" to get started.
-        </div>
+        {#if isConnectedValue}
+            <div class="w-full text-center text-gray-500 mt-8">
+                No widgets created yet. Click "Add Widget" to get started.
+            </div>
+        {:else}
+            <div class="w-full text-center text-gray-500 mt-8">
+                Please connect to create widgets.
+            </div>
+        {/if}
     {/if}
 
     {#if showPopup}
@@ -119,8 +158,6 @@
             <div class="bg-white p-8 rounded shadow-lg flex flex-col items-center justify-center w-full max-w-md">
                 <h2 class="text-2xl mb-4">Select a widget template</h2>
                 <button on:click={() => addWidget("note")} class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Note</button>
-                <button on:click={() => addWidget("timer")} class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Timer</button>
-                <button on:click={() => addWidget("spotify")} class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Spotify Player</button>
                 <button on:click={togglePopup} class="mt-4 bg-red-500 text-white px-4 py-2 rounded">Close</button>
             </div>
         </div>
