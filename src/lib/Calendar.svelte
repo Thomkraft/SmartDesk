@@ -1,10 +1,14 @@
 <script>
     import {onMount} from "svelte";
     import {isCurrentDay, isWeekend, getDayName, getMonthName} from "./date-helpers.js";
+    import {generateCalendarData} from "./data-calendar.js";
+    import EventMenu from "$lib/EventMenu.svelte";
 
     let calendarNav;
     let calendarDaysName;
     let calendar;
+    let calendarData = [];
+    let showEventMenu = false;
 
     // Initialize current date
     let currentDate = new Date(Date.now());
@@ -60,6 +64,10 @@
 
         // Update the calendar when select next or previous month
         function updateCalendar() {
+            // Update data of the calendar
+            calendarData = generateCalendarData(currentDate, calendarData);
+            console.log(calendarData);
+
             // Update month name
             labMonth.textContent = getMonthName(currentDate) + ", " + currentDate.getFullYear();
 
@@ -81,50 +89,59 @@
             console.log("FIRST DAY : " + firstDayIndex + " LAST DAY : " + lastDayIndex);
 
             // Add all days of the month
-            let dayNumber = 0;
-            let dayDate;
-
-            for (let day = 1; day <= 35; day++) {
-                // Days of the previous month
-                if (day < firstDayIndex) {
-                    dayNumber = new Date(year, month - 1, 0).getDate() - firstDayIndex + 1 + day;
-                    console.log(dayNumber);
-
-                // Days of the next month
-                } else if (day >= lastDayIndex) {
-                    dayNumber = day - lastDayIndex + 1;
-
-                // Days of the current month
-                } else {
-                    dayNumber = day - firstDayIndex + 1;
-                }
+            for (let day = 0; day <= 34; day++) {
+                const dayNumber = calendarData[day].day;
+                const dayMonth = calendarData[day].month;
+                const dayYear = calendarData[day].year;
 
                 // Update the date of the day
-                dayDate = new Date(year + "-" + month + "-" + dayNumber);
+                const dayDate = new Date(dayYear + "-" + dayMonth + "-" + dayNumber);
 
                 // Test if the day is the current day
                 const currentDay = isCurrentDay(dayDate);
 
                 // Test if the day is a weekend
-                const weekend = isWeekend(day);
+                const weekend = isWeekend(day + 1);
 
                 // Insert the day into the DOM tree
                 calendar.insertAdjacentHTML(
                     "beforeend",
-                    `<div class="
-                    day
-                    ${weekend ? `${currentDay ? 'text-blue-700' : ' text-blue-400'}` : ""}
+                    `<div class="day ${weekend ? `${currentDay ? 'text-blue-700' : ' text-blue-400'}` : ""}
                     flex justify-center text-center pt-2 pb-2 border-r-2 border-b-2 border-gray-300 select-none">
-                        <p class="${currentDay ? " self-start px-2 py-1 bg-teal-400 rounded-full" : "px-2 py-1"}">${dayNumber}</p>
+                        <p class="${currentDay ? " self-start min-w-8 px-2 py-1 bg-teal-400 rounded-full" : "px-2 py-1"}">${dayNumber}</p>
                     </div>`
                 );
             }
 
             // Option to select one or more days
-            document.querySelectorAll("#calendar .day").forEach
-            (day => {
-                day.addEventListener("click", event => {
-                    event.currentTarget.classList.toggle("bg-gray-200");
+            const allDays = document.querySelectorAll("#calendar .day");
+
+            allDays.forEach((dayElement, index) => {
+                dayElement.addEventListener("click", () => {
+                    // Open event menu on second click
+                    if (calendarData[index].selected) {
+                        const eventMenu = document.getElementById("event-menu");
+                        showEventMenu = true;
+
+                        console.log(eventMenu);
+                        console.log("second click");
+
+                        // Apply CSS to selected day
+                    } else {
+                        // Reset selection
+                        calendarData.forEach(day => day.selected = false);
+
+                        // Mark selected day
+                        calendarData[index].selected = true;
+
+                        // Apply CSS
+                        allDays.forEach(d => d.classList.remove("bg-gray-200"));
+                        dayElement.classList.add("bg-gray-200");
+
+                        showEventMenu = false;
+
+                        console.log("first click");
+                    }
                 });
             });
         }
@@ -133,27 +150,43 @@
     });
 </script>
 
-<div class="bg-gray-50 h-full flex flex-col">
-    <div id="calendar-nav" class="grid grid-cols-7 items-center py-4">
+<div class="bg-gray-50 w-full h-full flex flex-col">
+    <div id="calendar-nav" class="grid grid-cols-7 items-center py-4 pb-2">
+
         <div class="col-start-1 text-center">
+
             <input type="button" id="today-month"
                    class="border border-gray-800 rounded-md text-left px-3 py-1" value="Today" />
+
         </div>
 
         <p id="lab-month" class="col-start-3 col-end-6 text-center">Month</p>
 
         <div class="col-start-7 text-center">
+
             <input type="button" id="prev-month" value="<"
                    class="border border-gray-800 rounded-md px-3 py-1" />
 
             <input type="button" id="next-month" value=">"
                    class="border border-gray-800 rounded-md px-3 py-1" />
+
         </div>
 
     </div>
 
     <div id="days-name" class="grid grid-cols-7"></div>
 
-    <div id="calendar" class="grid grid-cols-7 flex-grow"></div>
+    <div id="calendar" class="grid grid-cols-7 flex-grow max-w"></div>
 
 </div>
+
+{#if showEventMenu}
+    <EventMenu />
+{/if}
+
+
+
+
+
+
+

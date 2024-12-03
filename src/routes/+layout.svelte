@@ -10,7 +10,7 @@
         <Header />
     </header>
 
-    <main class="flex-grow">
+    <main class="flex flex-grow flex-row">
         <slot />
     </main>
 
