@@ -14,7 +14,7 @@
         <slot />
     </main>
 
-    <footer class="bg-gray-900 p-5">
+    <footer class="relative bg-gray-900 p-5">
         <Footer />
     </footer>
 

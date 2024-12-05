@@ -1,8 +1,11 @@
 <script>
-    import {onMount} from "svelte";
-    import {isCurrentDay, isWeekend, getDayName, getMonthName} from "./date-helpers.js";
-    import {generateCalendarData} from "./data-calendar.js";
+    import { onMount } from "svelte";
+    import { toDate, selDate } from "./store.js";
+    import { isCurrentDay, isWeekend, getDayName, getMonthName } from "./date-helpers.js";
+    import { generateCalendarData } from "./data-calendar.js";
+    import { toggleEventMenu } from "./calendar-animation.js";
     import EventMenu from "$lib/EventMenu.svelte";
+
 
     let calendarNav;
     let calendarDaysName;
@@ -11,7 +14,8 @@
     let showEventMenu = false;
 
     // Initialize current date
-    let currentDate = new Date(Date.now());
+    let todayDate = $toDate;
+    let selectedDate = $selDate;
 
     onMount(() => {
         calendar = document.getElementById("calendar");
@@ -22,19 +26,21 @@
         const btnNextMonth = calendarNav.querySelector("#next-month");
         const labMonth = calendarNav.querySelector("#lab-month");
 
-        labMonth.textContent = getMonthName(currentDate, 0);
+        labMonth.textContent = getMonthName(todayDate);
         console.log(labMonth.textContent);
 
         // Choose month
         btnPrevMonth.addEventListener("click", () => {
             console.log("test previous");
-            currentDate.setMonth(currentDate.getMonth() - 1);
+            todayDate.setMonth(todayDate.getMonth() - 1);
+            toDate.set(todayDate);
             updateCalendar();
         })
 
         btnNextMonth.addEventListener("click", () => {
             console.log("test next");
-            currentDate.setMonth(currentDate.getMonth() + 1);
+            todayDate.setMonth(todayDate.getMonth() + 1);
+            toDate.set(todayDate);
             updateCalendar();
         })
 
@@ -42,9 +48,14 @@
         const btnTodayMonth = calendarNav.querySelector("#today-month");
 
         btnTodayMonth.addEventListener("click", () => {
-            console.log("test today");
-            currentDate = new Date(Date.now());
+            todayDate = new Date(Date.now());
+            toDate.set(todayDate);
+            //selectedDate = todayDate;
+
             updateCalendar();
+
+            // Update date of event menu header
+            //updateEventMenuHeader();
         })
 
         // Display all days name
@@ -65,18 +76,19 @@
         // Update the calendar when select next or previous month
         function updateCalendar() {
             // Update data of the calendar
-            calendarData = generateCalendarData(currentDate, calendarData);
+            calendarData = generateCalendarData(todayDate);
             console.log(calendarData);
 
             // Update month name
-            labMonth.textContent = getMonthName(currentDate) + ", " + currentDate.getFullYear();
+            labMonth.textContent = getMonthName(todayDate) + ", " + todayDate.getFullYear();
+            console.log("LABMONTH : " + labMonth.textContent);
 
             // Clear calendar
             calendar.innerHTML = "";
 
             // Get information on the current month
-            const year = currentDate.getFullYear();
-            const month = currentDate.getMonth() + 1;
+            const year = todayDate.getFullYear();
+            const month = todayDate.getMonth() + 1;
 
             let firstDayIndex = new Date(year + "-" + month + "-01").getDay();
 
@@ -120,14 +132,22 @@
                 dayElement.addEventListener("click", () => {
                     // Open event menu on second click
                     if (calendarData[index].selected) {
-                        const eventMenu = document.getElementById("event-menu");
-                        showEventMenu = true;
 
-                        console.log(eventMenu);
-                        console.log("second click");
+                        toggleEventMenu();
+
+                        showEventMenu = true;
 
                         // Apply CSS to selected day
                     } else {
+                        // Set selected date
+                        selectedDate.setDate(calendarData[index].day);
+                        selectedDate.setMonth(calendarData[index].month - 1);
+                        selectedDate.setFullYear(calendarData[index].year);
+                        selDate.set(selectedDate);
+
+                        // Update date of event menu header
+                        updateEventMenuHeader();
+
                         // Reset selection
                         calendarData.forEach(day => day.selected = false);
 
@@ -139,50 +159,64 @@
                         dayElement.classList.add("bg-gray-200");
 
                         showEventMenu = false;
-
-                        console.log("first click");
                     }
                 });
             });
         }
 
+        // Update date of event menu header
+        function updateEventMenuHeader() {
+            const eventMenuHeader = document.getElementById("event-menu-header");
+            const headerTitle =
+                getMonthName(selectedDate) + " " +
+                selectedDate.getDate();
+
+            eventMenuHeader.innerHTML = `<h1>${headerTitle} events</h1>`;
+
+        }
+
+        // Update elements on start
         updateCalendar();
     });
 </script>
 
 <div class="bg-gray-50 w-full h-full flex flex-col">
-    <div id="calendar-nav" class="grid grid-cols-7 items-center py-4 pb-2">
+    <div id="calendar-header" class="">
+        <div id="calendar-nav" class="grid grid-cols-7 max-md:flex max-md:justify-between items-center max-md:px-10 py-4 pb-2">
 
-        <div class="col-start-1 text-center">
+            <div class="col-start-1 text-center">
 
-            <input type="button" id="today-month"
-                   class="border border-gray-800 rounded-md text-left px-3 py-1" value="Today" />
+                <input type="button" id="today-month"
+                       class="border border-gray-800 rounded-md text-left px-3 py-1" value="Today"/>
 
+            </div>
+
+            <p id="lab-month" class="col-start-3 col-end-6 text-center">Month</p>
+
+            <div class="col-start-7 text-center">
+
+                <input type="button" id="prev-month" value="<"
+                       class="border border-gray-800 rounded-md px-3 py-1"/>
+
+
+                <input type="button" id="next-month" value=">"
+                       class="border border-gray-800 rounded-md px-3 py-1"/>
+
+            </div>
         </div>
 
-        <p id="lab-month" class="col-start-3 col-end-6 text-center">Month</p>
-
-        <div class="col-start-7 text-center">
-
-            <input type="button" id="prev-month" value="<"
-                   class="border border-gray-800 rounded-md px-3 py-1" />
-
-            <input type="button" id="next-month" value=">"
-                   class="border border-gray-800 rounded-md px-3 py-1" />
-
-        </div>
-
+        <div id="days-name" class="grid grid-cols-7"></div>
     </div>
-
-    <div id="days-name" class="grid grid-cols-7"></div>
 
     <div id="calendar" class="grid grid-cols-7 flex-grow max-w"></div>
 
 </div>
 
-{#if showEventMenu}
-    <EventMenu />
-{/if}
+<EventMenu/>
+
+
+
+
 
 
 
