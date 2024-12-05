@@ -19,8 +19,7 @@ const isCurrentDay = (day) => {
 
 }
 
-const getMonthName = (currentDate) => {
-    const date = currentDate;
+const getMonthName = (date) => {
     const options = {month: "long"};
     return new Intl.DateTimeFormat("en-US", options).format(date);
 }
@@ -32,4 +31,4 @@ const getDayName = day => {
 }
 
 // Export all functions
-export {isCurrentDay, isWeekend, getDayName, getMonthName};
+export { isCurrentDay, isWeekend, getDayName, getMonthName };

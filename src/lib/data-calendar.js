@@ -1,6 +1,6 @@
-function generateCalendarData(currentDate, calendarData) {
+function generateCalendarData(currentDate) {
     // Empty existing data
-    calendarData = [];
+    let calendarData = [];
 
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth() + 1;
