@@ -49,12 +49,25 @@ export async function PUT({ request }) {
     const db = await getConnection();
     
     try {
-        await db.query(
-            'UPDATE widget SET contenu = ?, position = ? WHERE id_widget = ?',
-            [widget.template, widget.position, widget.id]
-        );
+        const query = `
+            UPDATE widget 
+            SET position = ?,
+                contenu = COALESCE(?, contenu),
+                type = COALESCE(?, type)
+            WHERE id_widget = ?
+        `;
+        
+        await db.query(query, [
+            widget.position,
+            widget.contenu || widget.template,
+            widget.type,
+            widget.id_widget
+        ]);
+        
+        console.log('Updated widget:', widget);
         return json({ success: true });
     } catch (error) {
+        console.error('Update error:', error);
         return json({ error: 'Database error' }, { status: 500 });
     } finally {
         await db.end();

@@ -27,12 +27,24 @@ export async function insertWidget(widget) {
 
 export async function updateWidget(widget) {
     try {
+        console.log('Updating widget:', widget); // Debug log
         const response = await fetch('/page-widget', {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(widget)
+            body: JSON.stringify({
+                id_widget: widget.id_widget,
+                position: widget.position,
+                type: widget.type,
+                contenu: widget.contenu || widget.template
+            })
         });
-        if (!response.ok) throw new Error('Failed to update widget');
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Failed to update widget: ${errorText}`);
+        }
+        
+        return await response.json();
     } catch (error) {
         console.error('Error updating widget:', error);
         throw error;
