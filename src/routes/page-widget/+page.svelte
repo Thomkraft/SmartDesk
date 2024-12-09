@@ -6,6 +6,7 @@
     import { getWidgetsByUserId, insertWidget, updateWidget, deleteWidget } from '$lib/widgetService';
     import { getUserData } from '$lib/store.js';
     import { isConnected } from '$lib/store.js';
+    import { fade } from 'svelte/transition';
 
     // State variables
     const user = getUserData();
@@ -23,6 +24,7 @@
     let hasUnsavedChanges = false;
     let pendingPositions = [];
     const flipDurationMs = 150;
+    let isFabMenuOpen = false;
 
     // Initialize data on mount
     onMount(async () => {
@@ -177,6 +179,10 @@
         isEditing = false;
         widgetToEdit = null;
     }
+
+    function toggleFabMenu() {
+        isFabMenuOpen = !isFabMenuOpen;
+    }
 </script>
 
 {#if $isConnected}
@@ -206,21 +212,17 @@
                             Save Positions
                         </button>
                     {/if}
-                    <button 
-                        on:click={() => showPopup = true}
-                        class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition-colors">
-                        Add Widget
-                    </button>
                 </div>
             </div>
 
             <div 
-                class="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-8 p-6 mx-auto max-w-[1800px]" 
+                class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 p-2 mx-auto max-w-[1600px]"
+                style="grid-auto-flow: row dense;"
                 use:dndzone={{items: widgets, flipDurationMs, dragDisabled: !isDragEnabled || isEditing}}
                 on:consider={handleConsider}
                 on:finalize={handleFinalize}>
                 {#each widgets as widget (widget.id)}
-                    <div class="flex justify-center">
+                    <div class="flex justify-center items-center">
                         <WidgetTemplate
                             {widget}
                             onEdit={editWidget}
@@ -237,25 +239,69 @@
 
             {#if widgets.length === 0}
                 <div class="w-full text-center text-gray-500 mt-8">
-                    No widgets created yet. Click "Add Widget" to get started.
+                    No widgets created yet. Click the + button to get started.
                 </div>
             {/if}
 
-            {#if showPopup}
-                <div class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
-                    <div class="bg-white p-8 rounded-lg shadow-xl max-w-md w-full mx-4">
-                        <h2 class="text-2xl font-semibold mb-6">Select a widget template</h2>
-                        <button on:click={() => addWidget("note")} 
-                                class="w-full mb-3 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition-colors">
-                            Note
+            <!-- FAB Menu -->
+            <div class="fixed bottom-8 right-8 z-40">
+                {#if isFabMenuOpen}
+                    <div class="absolute bottom-20 right-0 flex flex-col-reverse gap-3 items-end" transition:fade={{ duration: 200 }}>
+                        <!-- Note Widget -->
+                        <button 
+                            on:click={() => {
+                                addWidget("note");
+                                toggleFabMenu();
+                            }}
+                            class="bg-blue-500 hover:bg-blue-600 text-white w-48 h-12 rounded-full shadow-lg flex items-center justify-center gap-2 transition-colors duration-200"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                            <span>Note</span>
                         </button>
-                        <button on:click={() => showPopup = false} 
-                                class="w-full bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition-colors">
-                            Close
+                        
+                        <!-- Spotify Widget -->
+                        <button 
+                            on:click={() => {
+                                addWidget("spotify");
+                                toggleFabMenu();
+                            }}
+                            class="bg-green-500 hover:bg-green-600 text-white w-48 h-12 rounded-full shadow-lg flex items-center justify-center gap-2 transition-colors duration-200"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                            </svg>
+                            <span>Spotify</span>
+                        </button>
+                        
+                        <!-- Timer Widget -->
+                        <button 
+                            on:click={() => {
+                                addWidget("timer");
+                                toggleFabMenu();
+                            }}
+                            class="bg-purple-500 hover:bg-purple-600 text-white w-48 h-12 rounded-full shadow-lg flex items-center justify-center gap-2 transition-colors duration-200"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span>Timer</span>
                         </button>
                     </div>
-                </div>
-            {/if}
+                {/if}
+                
+                <!-- Main FAB Button -->
+                <button 
+                    on:click={toggleFabMenu}
+                    class="bg-blue-500 hover:bg-blue-600 text-white w-16 h-16 rounded-full shadow-lg flex items-center justify-center transition-all duration-200 {isFabMenuOpen ? 'rotate-45' : ''}"
+                    title="Add Widget"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                </button>
+            </div>
 
             {#if contextMenuVisible}
                 <ContextMenu 
