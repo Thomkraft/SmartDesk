@@ -3,8 +3,6 @@
 
     const user = getUserData();
 
-    alert(user.id);
-
 </script>
 
 <div class="container mx-auto p-4">

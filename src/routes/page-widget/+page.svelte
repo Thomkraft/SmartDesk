@@ -2,11 +2,12 @@
     import { dndzone } from "svelte-dnd-action";
     import ContextMenu from "./ContextMenu.svelte";
     import WidgetTemplate from "$lib/Note.svelte";
-    import { onMount } from "svelte";
     import { getWidgetsByUserId, insertWidget, updateWidget, deleteWidget } from '$lib/widgetService';
     import { getUserData } from '$lib/store.js';
     import { isConnected } from '$lib/store.js';
     import { fade } from 'svelte/transition';
+    import { onDestroy, onMount } from 'svelte';
+    
 
     // State variables
     const user = getUserData();
