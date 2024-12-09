@@ -4,8 +4,10 @@
     import WidgetTemplate from "$lib/Note.svelte";
     import { onMount } from "svelte";
     import { getWidgetsByUserId, insertWidget, updateWidget, deleteWidget } from '$lib/widgetService';
+    import { getUserData } from '$lib/store.js';
 
-    const FIXED_USER_ID = 15;
+    const user = getUserData();
+    const FIXED_USER_ID = user.id;
     let showPopup = false;
     let widgets = [];
     let contextMenuVisible = false;
