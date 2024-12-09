@@ -7,7 +7,6 @@
     export let onContextMenu;
     export let onSave;
     export let onCancel;
-
     let newContent = widget.template;
     let originalContent = widget.template;
 
