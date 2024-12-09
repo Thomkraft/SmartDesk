@@ -1,5 +1,6 @@
 import mysql from 'mysql2/promise';
 import bcrypt from 'bcrypt';
+import { saveUserData,clearAllData } from '$lib/store.js';
 
 
 export async function POST({ request }) {
@@ -29,10 +30,15 @@ export async function POST({ request }) {
 
             //comparaison des 2 mdp haché
             if (await bcrypt.compare(mdp_utilisateur, hashedPasswordFromBD)) {
-
-
+                //Enregisstrement des donnée de l'utilisateur dans le local storage
+                const [rows] = await db.query('SELECT nom_utilisateur,id_utilisateur FROM utilisateur WHERE email_utilisateur = ?', [email_utilisateur]);
+                
                 await db.end();
-                return new Response(JSON.stringify({ message: 'Connecté ! Redirection...' }), { status: 201 });
+                return new Response(JSON.stringify({ message: 'Connecté ! Redirection...',
+                                                    email_utilisateur : email_utilisateur,
+                                                    pseudo :  rows[0]?.nom_utilisateur,
+                                                    id : rows[0]?.id_utilisateur,}),
+                                                    { status: 201 });
             } else {
                 await db.end();
                 return new Response(JSON.stringify({ message: 'Mot de passe incorrect' }), { status: 400 });

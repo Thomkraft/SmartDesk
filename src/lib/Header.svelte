@@ -1,10 +1,10 @@
 <script>
     import { goto } from "$app/navigation";
     import { writable } from "svelte/store";
-    import { isConnected } from "$lib/store.js";
+    import { isConnected, clearAllData} from "$lib/store.js";
     import { on } from "svelte/events";
 
-    let connected = isConnected;
+    let connected = $isConnected;
     let favorites = [];
     let editIndex = null;
     let editFavoriteName = "";
@@ -125,6 +125,7 @@
 
     function disconectionVerif () {
         if (confirm("Etes vous sur de vouloir vous déconnecter ?")) {
+            clearAllData();
             isConnected.set(false);
             goto ('/');
         }
