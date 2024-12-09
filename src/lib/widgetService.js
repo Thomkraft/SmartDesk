@@ -1,37 +1,52 @@
-// src/lib/widgetService.js
-import mysql from 'mysql2/promise';
+export async function getWidgetsByUserId(userId) {
+    try {
+        const response = await fetch(`/page-widget?userId=${userId}`);
+        if (!response.ok) throw new Error('Failed to fetch widgets');
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching widgets:', error);
+        return [];
+    }
+}
 
 export async function insertWidget(widget) {
-    const db = await mysql.createConnection({
-        host: '85.215.130.37',
-        user: 'SAE2',
-        password: 'Zao@67.pomme',
-        database: 'smartdesk',
-        connectTimeout: 5000
-    });
-
-    const [result] = await db.query(
-        'INSERT INTO widget (type, contenu, position, id_utilisateur) VALUES (?, ?, ?, ?)',
-        [widget.type, widget.template, widget.position, widget.id_utilisateur]
-    );
-
-    await db.end();
-    return result.insertId;
+    try {
+        const response = await fetch('/page-widget', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(widget)
+        });
+        if (!response.ok) throw new Error('Failed to insert widget');
+        const data = await response.json();
+        return data.id;
+    } catch (error) {
+        console.error('Error inserting widget:', error);
+        throw error;
+    }
 }
 
 export async function updateWidget(widget) {
-    const db = await mysql.createConnection({
-        host: '85.215.130.37',
-        user: 'SAE2',
-        password: 'Zao@67.pomme',
-        database: 'smartdesk',
-        connectTimeout: 5000
-    });
+    try {
+        const response = await fetch('/page-widget', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(widget)
+        });
+        if (!response.ok) throw new Error('Failed to update widget');
+    } catch (error) {
+        console.error('Error updating widget:', error);
+        throw error;
+    }
+}
 
-    await db.query(
-        'UPDATE widget SET contenu = ?, position = ? WHERE id_widget = ?',
-        [widget.template, widget.position, widget.id]
-    );
-
-    await db.end();
+export async function deleteWidget(widgetId) {
+    try {
+        const response = await fetch(`/page-widget?id=${widgetId}`, {
+            method: 'DELETE'
+        });
+        if (!response.ok) throw new Error('Failed to delete widget');
+    } catch (error) {
+        console.error('Error deleting widget:', error);
+        throw error;
+    }
 }
