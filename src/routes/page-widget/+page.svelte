@@ -214,12 +214,13 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" 
+            <div 
+                class="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-8 p-6 mx-auto max-w-[1800px]" 
                 use:dndzone={{items: widgets, flipDurationMs, dragDisabled: !isDragEnabled || isEditing}}
                 on:consider={handleConsider}
                 on:finalize={handleFinalize}>
                 {#each widgets as widget (widget.id)}
-                    <div class="w-full">
+                    <div class="flex justify-center">
                         <WidgetTemplate
                             {widget}
                             onEdit={editWidget}
