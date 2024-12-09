@@ -27,18 +27,18 @@
         const labMonth = calendarNav.querySelector("#lab-month");
 
         labMonth.textContent = getMonthName(todayDate);
-        console.log(labMonth.textContent);
+        //console.log(labMonth.textContent);
 
         // Choose month
         btnPrevMonth.addEventListener("click", () => {
-            console.log("test previous");
+            //console.log("test previous");
             todayDate.setMonth(todayDate.getMonth() - 1);
             toDate.set(todayDate);
             updateCalendar();
         })
 
         btnNextMonth.addEventListener("click", () => {
-            console.log("test next");
+            //console.log("test next");
             todayDate.setMonth(todayDate.getMonth() + 1);
             toDate.set(todayDate);
             updateCalendar();
@@ -77,11 +77,11 @@
         function updateCalendar() {
             // Update data of the calendar
             calendarData = generateCalendarData(todayDate);
-            console.log(calendarData);
+            //console.log(calendarData);
 
             // Update month name
             labMonth.textContent = getMonthName(todayDate) + ", " + todayDate.getFullYear();
-            console.log("LABMONTH : " + labMonth.textContent);
+            //console.log("LABMONTH : " + labMonth.textContent);
 
             // Clear calendar
             calendar.innerHTML = "";
@@ -98,7 +98,7 @@
             }
 
             const lastDayIndex = new Date(year, month, 0).getDate() + firstDayIndex;
-            console.log("FIRST DAY : " + firstDayIndex + " LAST DAY : " + lastDayIndex);
+            //console.log("FIRST DAY : " + firstDayIndex + " LAST DAY : " + lastDayIndex);
 
             // Add all days of the month
             for (let day = 0; day <= 34; day++) {

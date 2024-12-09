@@ -2,7 +2,7 @@
     import { onMount } from "svelte";
     import axios from "axios";
     import { goto } from "$app/navigation";
-    import { isConnected } from "$lib/store.js";
+    import { isConnected, getUserData,saveUserData } from "$lib/store.js";
 
     let email_utilisateur = "";
     let mdp_utilisateur = "";
@@ -25,6 +25,10 @@
         if (response.status === 201) {
             rep = 0;
             isConnected.set(true);
+            const {email_utilisateur , pseudo,id} = repbody;
+
+            saveUserData(email_utilisateur , pseudo,id);
+
             window.setTimeout(() => {
                 goto("/");
             }, 1000);

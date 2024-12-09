@@ -6,12 +6,12 @@ const isWeekend = day => {
 const isCurrentDay = (day) => {
     const todayDate = new Date(Date.now());
 
-    console.log(
-        'today\n' +
-        todayDate.getDate() + todayDate.getMonth() + todayDate.getFullYear() +
-        '\nday\n' +
-        day.getDate() + day.getMonth() + day.getFullYear()
-    );
+    //console.log(
+        //'today\n' +
+        //todayDate.getDate() + todayDate.getMonth() + todayDate.getFullYear() +
+        //'\nday\n' +
+      //  day.getDate() + day.getMonth() + day.getFullYear()
+    //);
 
     return todayDate.getDate() === day.getDate() &&
         todayDate.getMonth() === day.getMonth() &&
