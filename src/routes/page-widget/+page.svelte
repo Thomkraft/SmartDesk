@@ -215,14 +215,13 @@
                 </div>
             </div>
 
-            <div 
-                class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 p-2 mx-auto max-w-[1600px]"
-                style="grid-auto-flow: row dense;"
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" 
                 use:dndzone={{items: widgets, flipDurationMs, dragDisabled: !isDragEnabled || isEditing}}
                 on:consider={handleConsider}
-                on:finalize={handleFinalize}>
+                on:finalize={handleFinalize}
+                >
                 {#each widgets as widget (widget.id)}
-                    <div class="flex justify-center items-center">
+                    <div class="w-full bg-white rounded-lg shadow-md">
                         <WidgetTemplate
                             {widget}
                             onEdit={editWidget}
@@ -296,6 +295,7 @@
                     on:click={toggleFabMenu}
                     class="bg-blue-500 hover:bg-blue-600 text-white w-16 h-16 rounded-full shadow-lg flex items-center justify-center transition-all duration-200 {isFabMenuOpen ? 'rotate-45' : ''}"
                     title="Add Widget"
+                    aria-label="Add Widget"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
