@@ -29,12 +29,10 @@
             window.spotifyCallback = async (code) => {
                 const response = await fetch("/api/spotify-auth", {
                     method: "POST",
-                    mode: 'cors',
                     headers: {
-                        'Content-Type': 'text/plain'
+                        'Content-Type': 'application/json'
                     },
-                    credentials: 'same-origin',
-                    body: code,
+                    body: JSON.stringify({ code }),
                 });
 
                 const data = await response.json();
@@ -53,12 +51,10 @@
 
         const response = await fetch("/api/spotify-auth", {
             method: "PUT",
-            mode: 'cors',
             headers: {
-                'Content-Type': 'text/plain'
+                'Content-Type': 'application/json'
             },
-            credentials: 'same-origin',
-            body: refreshToken,
+            body: JSON.stringify({ refreshToken }),
         });
 
         const data = await response.json();

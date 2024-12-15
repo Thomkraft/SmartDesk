@@ -2,21 +2,6 @@ import fetch from 'node-fetch';
 
 const clientId = "f34a83c0460345769ab81d8491433902";
 const clientSecret = "9ee4046ca4344040a94e32fa3901aa44";
-const redirectUri = "http://85.215.130.37:3000/api/spotify-auth";
-
-const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, POST, PUT, OPTIONS',
-    'Access-Control-Allow-Headers': '*',
-    'Access-Control-Max-Age': '86400'
-};
-
-export async function OPTIONS() {
-    return new Response(null, {
-        status: 204,
-        headers: corsHeaders
-    });
-}
 
 export async function GET({ url }) {
     const code = url.searchParams.get('code');
@@ -28,7 +13,6 @@ export async function GET({ url }) {
             </script>`,
             {
                 headers: { 
-                    ...corsHeaders,
                     'Content-Type': 'text/html'
                 }
             }
@@ -36,7 +20,6 @@ export async function GET({ url }) {
     }
     return new Response('No code provided', { 
         status: 400,
-        headers: corsHeaders
     });
 }
 
@@ -44,15 +27,13 @@ export async function POST({ request }) {
     if (request.method === 'OPTIONS') {
         return new Response(null, {
             status: 204,
-            headers: corsHeaders
         });
     }
 
     try {
-        const code = await request.text();
+        const { code } = await request.json();
         const currentUrl = request.url;
         const redirectUri = new URL('/api/spotify-auth', currentUrl).toString();
-        
         const response = await fetch('https://accounts.spotify.com/api/token', {
             method: 'POST',
             headers: {
@@ -70,14 +51,12 @@ export async function POST({ request }) {
         if (data.error) {
             return new Response(JSON.stringify({ error: data.error }), { 
                 status: 400,
-                headers: corsHeaders
             });
         }
         
         return new Response(JSON.stringify(data), {
             status: 200,
             headers: {
-                ...corsHeaders,
                 'Content-Type': 'application/json'
             }
         });
@@ -85,14 +64,13 @@ export async function POST({ request }) {
         console.error(error);
         return new Response(JSON.stringify({ error: 'Server error' }), { 
             status: 500,
-            headers: corsHeaders
         });
     }
 }
 
 export async function PUT({ request }) {
     try {
-        const refreshToken = await request.text();
+        const { refreshToken } = await request.json();
         
         const response = await fetch('https://accounts.spotify.com/api/token', {
             method: 'POST',
@@ -110,13 +88,11 @@ export async function PUT({ request }) {
         if (data.error) {
             return new Response(JSON.stringify({ error: data.error }), { 
                 status: 400,
-                headers: corsHeaders
             });
         }
 
         return new Response(JSON.stringify(data), {
             headers: {
-                ...corsHeaders,
                 'Content-Type': 'application/json'
             }
         });
@@ -124,7 +100,6 @@ export async function PUT({ request }) {
         console.error(error);
         return new Response(JSON.stringify({ error: 'Server error' }), { 
             status: 500,
-            headers: corsHeaders
         });
     }
 }
