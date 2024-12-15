@@ -5,10 +5,10 @@ const clientSecret = "9ee4046ca4344040a94e32fa3901aa44";
 const redirectUri = "http://85.215.130.37:3000/api/spotify-auth";
 
 const corsHeaders = {
-    'Access-Control-Allow-Origin': 'http://85.215.130.37:3000',
+    'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET, POST, PUT, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    'Access-Control-Allow-Credentials': 'true'
+    'Access-Control-Allow-Headers': '*',
+    'Access-Control-Max-Age': '86400'
 };
 
 export async function OPTIONS() {
@@ -50,6 +50,8 @@ export async function POST({ request }) {
 
     try {
         const code = await request.text();
+        const currentUrl = request.url;
+        const redirectUri = new URL('/api/spotify-auth', currentUrl).toString();
         
         const response = await fetch('https://accounts.spotify.com/api/token', {
             method: 'POST',

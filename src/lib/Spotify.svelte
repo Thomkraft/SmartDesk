@@ -12,7 +12,7 @@
     let noPlayback = false;
 
     const clientId = "f34a83c0460345769ab81d8491433902";
-    const redirectUri = "http://85.215.130.37:3000/api/spotify-auth";
+    const redirectUri = window.location.origin + "/api/spotify-auth";
 
     async function authenticateSpotify() {
         const scope =
@@ -29,10 +29,11 @@
             window.spotifyCallback = async (code) => {
                 const response = await fetch("/api/spotify-auth", {
                     method: "POST",
+                    mode: 'cors',
                     headers: {
                         'Content-Type': 'text/plain'
                     },
-                    credentials: 'include',
+                    credentials: 'same-origin',
                     body: code,
                 });
 
@@ -52,10 +53,11 @@
 
         const response = await fetch("/api/spotify-auth", {
             method: "PUT",
+            mode: 'cors',
             headers: {
                 'Content-Type': 'text/plain'
             },
-            credentials: 'include',
+            credentials: 'same-origin',
             body: refreshToken,
         });
 
