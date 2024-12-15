@@ -1,7 +1,8 @@
 <script>
     import { dndzone } from "svelte-dnd-action";
     import ContextMenu from "./ContextMenu.svelte";
-    import WidgetTemplate from "$lib/Note.svelte";
+    import Note from "$lib/Note.svelte";
+    import Spotify from "$lib/Spotify.svelte";
     import { getWidgetsByUserId, insertWidget, updateWidget, deleteWidget } from '$lib/widgetService';
     import { getUserData } from '$lib/store.js';
     import { isConnected } from '$lib/store.js';
@@ -222,8 +223,9 @@
                 on:finalize={handleFinalize}
                 >
                 {#each widgets as widget (widget.id)}
+                {#if widget.type === 'note'}
                     <div class="w-full bg-white rounded-lg shadow-md">
-                        <WidgetTemplate
+                        <Note
                             {widget}
                             onEdit={editWidget}
                             onDelete={handleDelete}
@@ -234,6 +236,12 @@
                             onCancel={handleCancel}
                         />
                     </div>
+                {:else if widget.type === 'spotify'}
+                    <div class="w-full bg-white rounded-lg shadow-md">
+                        <Spotify
+                        />
+                    </div>
+                {/if}
                 {/each}
             </div>
 
