@@ -32,6 +32,7 @@
                     headers: {
                         'Content-Type': 'text/plain'
                     },
+                    credentials: 'include',
                     body: code,
                 });
 
@@ -54,6 +55,7 @@
             headers: {
                 'Content-Type': 'text/plain'
             },
+            credentials: 'include',
             body: refreshToken,
         });
 

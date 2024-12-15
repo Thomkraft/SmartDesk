@@ -5,13 +5,15 @@ const clientSecret = "9ee4046ca4344040a94e32fa3901aa44";
 const redirectUri = "http://85.215.130.37:3000/api/spotify-auth";
 
 const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Origin': 'http://85.215.130.37:3000',
     'Access-Control-Allow-Methods': 'GET, POST, PUT, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type'
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Access-Control-Allow-Credentials': 'true'
 };
 
 export async function OPTIONS() {
     return new Response(null, {
+        status: 204,
         headers: corsHeaders
     });
 }
@@ -26,8 +28,8 @@ export async function GET({ url }) {
             </script>`,
             {
                 headers: { 
-                    'Content-Type': 'text/html',
-                    ...corsHeaders
+                    ...corsHeaders,
+                    'Content-Type': 'text/html'
                 }
             }
         );
@@ -39,6 +41,13 @@ export async function GET({ url }) {
 }
 
 export async function POST({ request }) {
+    if (request.method === 'OPTIONS') {
+        return new Response(null, {
+            status: 204,
+            headers: corsHeaders
+        });
+    }
+
     try {
         const code = await request.text();
         
@@ -64,6 +73,7 @@ export async function POST({ request }) {
         }
         
         return new Response(JSON.stringify(data), {
+            status: 200,
             headers: {
                 ...corsHeaders,
                 'Content-Type': 'application/json'
