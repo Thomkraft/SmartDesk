@@ -16,8 +16,8 @@ export async function POST({ request }) {
     });
 
     const currentUrl = request.url;
-    const url = new URL('/page-connection/recovery', currentUrl).toString();
-
+    const url = new URL('/page-connection/recovery', currentUrl).toString().replace('https://', 'http://');
+    
     if (token && password) {
 
 

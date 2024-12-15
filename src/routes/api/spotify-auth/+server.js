@@ -33,7 +33,9 @@ export async function POST({ request }) {
     try {
         const { code } = await request.json();
         const currentUrl = request.url;
-        const redirectUri = new URL('/api/spotify-auth', currentUrl).toString();
+        // Forcer HTTP pour l'URL de redirection si on est sur le serveur de dev
+        const redirectUri = new URL('/api/spotify-auth', currentUrl).toString().replace('https://', 'http://');
+        
         const response = await fetch('https://accounts.spotify.com/api/token', {
             method: 'POST',
             headers: {

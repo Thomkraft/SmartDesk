@@ -12,7 +12,8 @@
     let noPlayback = false;
 
     const clientId = "f34a83c0460345769ab81d8491433902";
-    const redirectUri = window.location.origin + "/api/spotify-auth";
+    // Forcer HTTP pour l'URL de redirection
+    const redirectUri = window.location.origin.replace('https://', 'http://') + "/api/spotify-auth";
 
     async function authenticateSpotify() {
         const scope =
