@@ -6,9 +6,15 @@ const redirectUri = "http://85.215.130.37:3000/api/spotify-auth";
 
 const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, POST, PUT',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type'
 };
+
+export async function OPTIONS() {
+    return new Response(null, {
+        headers: corsHeaders
+    });
+}
 
 export async function GET({ url }) {
     const code = url.searchParams.get('code');
@@ -19,11 +25,17 @@ export async function GET({ url }) {
                 window.close();
             </script>`,
             {
-                headers: { 'Content-Type': 'text/html' }
+                headers: { 
+                    'Content-Type': 'text/html',
+                    ...corsHeaders
+                }
             }
         );
     }
-    return new Response('No code provided', { status: 400 });
+    return new Response('No code provided', { 
+        status: 400,
+        headers: corsHeaders
+    });
 }
 
 export async function POST({ request }) {

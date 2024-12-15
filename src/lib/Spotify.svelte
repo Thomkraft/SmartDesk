@@ -29,6 +29,9 @@
             window.spotifyCallback = async (code) => {
                 const response = await fetch("/api/spotify-auth", {
                     method: "POST",
+                    headers: {
+                        'Content-Type': 'text/plain'
+                    },
                     body: code,
                 });
 
@@ -48,6 +51,9 @@
 
         const response = await fetch("/api/spotify-auth", {
             method: "PUT",
+            headers: {
+                'Content-Type': 'text/plain'
+            },
             body: refreshToken,
         });
 
