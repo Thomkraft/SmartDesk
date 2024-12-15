@@ -12,7 +12,7 @@
     let noPlayback = false;
 
     const clientId = "f34a83c0460345769ab81d8491433902";
-    const redirectUri = "http://localhost:5173/api/spotify-auth";
+    const redirectUri = "http://85.215.130.37:3000/api/spotify-auth";
 
     async function authenticateSpotify() {
         const scope =
