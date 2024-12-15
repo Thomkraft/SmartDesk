@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 
 const clientId = "f34a83c0460345769ab81d8491433902";
 const clientSecret = "9ee4046ca4344040a94e32fa3901aa44";
-const redirectUri = "http://localhost:5173/api/spotify-auth";
+const redirectUri = "http://85.215.130.37:3000/api/spotify-auth";
 
 export async function GET({ url }) {
     const code = url.searchParams.get('code');
