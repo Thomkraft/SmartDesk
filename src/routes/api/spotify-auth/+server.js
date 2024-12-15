@@ -4,6 +4,12 @@ const clientId = "f34a83c0460345769ab81d8491433902";
 const clientSecret = "9ee4046ca4344040a94e32fa3901aa44";
 const redirectUri = "http://85.215.130.37:3000/api/spotify-auth";
 
+const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+};
+
 export async function GET({ url }) {
     const code = url.searchParams.get('code');
     if (code) {
@@ -39,13 +45,24 @@ export async function POST({ request }) {
 
         const data = await response.json();
         if (data.error) {
-            return new Response(JSON.stringify({ error: data.error }), { status: 400 });
+            return new Response(JSON.stringify({ error: data.error }), { 
+                status: 400,
+                headers: corsHeaders
+            });
         }
         
-        return new Response(JSON.stringify(data));
+        return new Response(JSON.stringify(data), {
+            headers: {
+                ...corsHeaders,
+                'Content-Type': 'application/json'
+            }
+        });
     } catch (error) {
         console.error(error);
-        return new Response(JSON.stringify({ error: 'Server error' }), { status: 500 });
+        return new Response(JSON.stringify({ error: 'Server error' }), { 
+            status: 500,
+            headers: corsHeaders
+        });
     }
 }
 
@@ -67,12 +84,23 @@ export async function PUT({ request }) {
 
         const data = await response.json();
         if (data.error) {
-            return new Response(JSON.stringify({ error: data.error }), { status: 400 });
+            return new Response(JSON.stringify({ error: data.error }), { 
+                status: 400,
+                headers: corsHeaders
+            });
         }
 
-        return new Response(JSON.stringify(data));
+        return new Response(JSON.stringify(data), {
+            headers: {
+                ...corsHeaders,
+                'Content-Type': 'application/json'
+            }
+        });
     } catch (error) {
         console.error(error);
-        return new Response(JSON.stringify({ error: 'Server error' }), { status: 500 });
+        return new Response(JSON.stringify({ error: 'Server error' }), { 
+            status: 500,
+            headers: corsHeaders
+        });
     }
 }
