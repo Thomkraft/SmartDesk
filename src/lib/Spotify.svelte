@@ -1,6 +1,11 @@
 <script>
     import { onMount, onDestroy } from "svelte";
 
+    export let widget;
+    export let onEdit = () => {};
+    export let onDelete = () => {};
+    export let onContextMenu = () => {};
+
     let isPlaying = false;
     let accessToken = null;
     let currentTrack = null;
@@ -225,69 +230,77 @@
     role="button"
     tabindex="0"
     on:dblclick={openSpotifyPopup}
->
-    {#if noPlayback}
-        <div class="text-center py-4 text-gray-400">
-            Aucune lecture en cours. Ouvrez Spotify pour commencer à écouter, vous pouvez double-cliquer ici pour ouvrir Spotify.
-        </div>
-    {:else if currentTrack}
-        <div class="flex items-center mb-2.5 gap-2.5">
-            <img
-                src={getAlbumCoverUrl(currentTrack)}
-                alt="Album cover"
-                class="w-[60px] h-[60px] rounded object-cover bg-black/30 album-cover"
-            />
-            <div class="flex flex-col overflow-hidden">
-                <span
-                    class="font-bold whitespace-nowrap overflow-hidden text-ellipsis"
-                >
-                    {currentTrack.name || "Titre inconnu"}
-                </span>
-                <span
-                    class="text-sm opacity-80 whitespace-nowrap overflow-hidden text-ellipsis"
-                >
-                    {currentTrack.artists?.[0]?.name || "Artiste inconnu"}
-                </span>
+    on:contextmenu|preventDefault={(event) => onContextMenu(event)}
+> 
+    <div
+        class="bg-gray-800 p-2.5 rounded-lg text-white select-none"
+        role="button"
+        tabindex="0"
+        on:dblclick={openSpotifyPopup}
+    >
+        {#if noPlayback}
+            <div class="text-center py-4 text-gray-400">
+                Aucune lecture en cours. Ouvrez Spotify pour commencer à écouter, vous pouvez double-cliquer ici pour ouvrir Spotify.
             </div>
-        </div>
-        <div class="flex items-center gap-2 my-2.5 px-1.5">
-            <span class="text-xs text-[#b3b3b3] min-w-[35px]"
-                >{formatTime(progress)}</span
-            >
-            <div class="flex-1 h-1 bg-white/10 rounded-sm overflow-hidden">
-                <div
-                    class="h-full bg-[#1DB954] transition-[width] duration-1000 linear"
-                    style="width: {(progress / duration) * 100}%"
-                ></div>
+        {:else if currentTrack}
+            <div class="flex items-center mb-2.5 gap-2.5">
+                <img
+                    src={getAlbumCoverUrl(currentTrack)}
+                    alt="Album cover"
+                    class="w-[60px] h-[60px] rounded object-cover bg-black/30 album-cover"
+                />
+                <div class="flex flex-col overflow-hidden">
+                    <span
+                        class="font-bold whitespace-nowrap overflow-hidden text-ellipsis"
+                    >
+                        {currentTrack.name || "Titre inconnu"}
+                    </span>
+                    <span
+                        class="text-sm opacity-80 whitespace-nowrap overflow-hidden text-ellipsis"
+                    >
+                        {currentTrack.artists?.[0]?.name || "Artiste inconnu"}
+                    </span>
+                </div>
             </div>
-            <span class="text-xs text-[#b3b3b3] min-w-[35px]"
-                >{formatTime(duration)}</span
-            >
-        </div>
-    {/if}
+            <div class="flex items-center gap-2 my-2.5 px-1.5">
+                <span class="text-xs text-[#b3b3b3] min-w-[35px]"
+                    >{formatTime(progress)}</span
+                >
+                <div class="flex-1 h-1 bg-white/10 rounded-sm overflow-hidden">
+                    <div
+                        class="h-full bg-[#1DB954] transition-[width] duration-1000 linear"
+                        style="width: {(progress / duration) * 100}%"
+                    ></div>
+                </div>
+                <span class="text-xs text-[#b3b3b3] min-w-[35px]"
+                    >{formatTime(duration)}</span
+                >
+            </div>
+        {/if}
 
-    <div class="flex gap-2.5 justify-center mt-4">
-        <button
-            class="bg-transparent border-none text-white w-6 h-6 cursor-pointer hover:scale-110 transition-transform"
-            tabindex="0"
-            on:click={() => skipTrack("previous")}
-        >
-            {@html icons.previous}
-        </button>
-        <button
-            class="bg-transparent border-none text-white w-6 h-6 cursor-pointer hover:scale-110 transition-transform"
-            tabindex="0"
-            on:click={togglePlayPause}
-        >
-            {@html isPlaying ? icons.pause : icons.play}
-        </button>
-        <button
-            class="bg-transparent border-none text-white w-6 h-6 cursor-pointer hover:scale-110 transition-transform"
-            tabindex="0"
-            on:click={() => skipTrack("next")}
-        >
-            {@html icons.next}
-        </button>
+        <div class="flex gap-2.5 justify-center mt-4">
+            <button
+                class="bg-transparent border-none text-white w-6 h-6 cursor-pointer hover:scale-110 transition-transform"
+                tabindex="0"
+                on:click={() => skipTrack("previous")}
+            >
+                {@html icons.previous}
+            </button>
+            <button
+                class="bg-transparent border-none text-white w-6 h-6 cursor-pointer hover:scale-110 transition-transform"
+                tabindex="0"
+                on:click={togglePlayPause}
+            >
+                {@html isPlaying ? icons.pause : icons.play}
+            </button>
+            <button
+                class="bg-transparent border-none text-white w-6 h-6 cursor-pointer hover:scale-110 transition-transform"
+                tabindex="0"
+                on:click={() => skipTrack("next")}
+            >
+                {@html icons.next}
+            </button>
+        </div>
     </div>
 </div>
 

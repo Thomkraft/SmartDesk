@@ -26,23 +26,22 @@
 </script>
 
 <div
-    class="h-[500px] w-[400px] border border-gray-300 p-4 bg-gray-800 shadow-[0_-1px_1px_0_rgba(0,255,255,1),1px_0_1px_0_rgba(0,255,255,1)] flex flex-col justify-between"
+    class="h-[500px] w-[400px] bg-gray-800 shadow-[0_-1px_1px_0_rgba(0,255,255,1),1px_0_1px_0_rgba(0,255,255,1)] flex flex-col"
+    on:contextmenu|preventDefault={(event) => onContextMenu(event)}
     role="region"
-    on:contextmenu={(event) => {
-        event.preventDefault();
-        onContextMenu({ widgetId: widget.id, event });
-    }}
 >
+
     {#if isEditing}
         <div class="flex flex-col h-full">
             <div 
                 contenteditable="true" 
                 bind:innerHTML={newContent} 
-                class="flex-grow w-full text-white mb-4 line-clamp-15 p-2 break-words"
+                class="flex-grow w-full text-white bg-transparent p-4"
                 style="white-space: pre-wrap; word-wrap: break-word;"
                 on:input={(e) => newContent = e.target.innerHTML}
             ></div>
-            <div class="flex items-center justify-between space-x-4 w-full">
+            <div class="p-4 bg-gray-800">
+                <div class="flex items-center justify-between space-x-4 w-full">
                 <div class="toolbar flex flex-nowrap space-x-2">
                     <button class="bg-gray-200 p-2 rounded whitespace-nowrap" title="Bold" on:click={() => applyStyle('bold')}>Bold</button>
                     <button class="bg-gray-200 p-2 rounded whitespace-nowrap" title="Italic" on:click={() => applyStyle('italic')}>Italic</button>
@@ -54,8 +53,9 @@
                 </div>
             </div>
         </div>
+    </div>
     {:else}
-        <div class="widget-content text-white p-2 line-clamp-18 break-words" 
+        <div class="h-full w-full text-white p-4 break-words" 
              style="white-space: pre-wrap; word-wrap: break-word;">
             {@html widget.template}
         </div>

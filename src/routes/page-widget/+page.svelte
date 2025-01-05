@@ -3,11 +3,13 @@
     import ContextMenu from "./ContextMenu.svelte";
     import Note from "$lib/Note.svelte";
     import Spotify from "$lib/Spotify.svelte";
+    import Timer from "$lib/Timer.svelte";
     import { getWidgetsByUserId, insertWidget, updateWidget, deleteWidget } from '$lib/widgetService';
     import { getUserData } from '$lib/store.js';
     import { isConnected } from '$lib/store.js';
     import { fade } from 'svelte/transition';
     import { onDestroy, onMount } from 'svelte';
+    import Notification from '$lib/Notification.svelte';
     
 
     // State variables
@@ -27,6 +29,8 @@
     let pendingPositions = [];
     const flipDurationMs = 150;
     let isFabMenuOpen = false;
+    let dragStarted = false;
+    let dragTimeout;
 
     // Initialize data on mount
     onMount(async () => {
@@ -57,24 +61,36 @@
         }
     });
 
-    // Widget management functions
+    onMount(() => {
+        window.addEventListener('click', (event) => {
+            const contextMenu = document.querySelector('.context-menu');
+            if (contextMenuVisible && !contextMenu?.contains(event.target)) {
+                hideContextMenu();
+            }
+        });
+    });
+
     async function addWidget(type) {
         try {
             const position = widgets.length;
+            const template = type === 'timer' ? JSON.stringify({
+                activeTab: 'clock',
+                time: new Date(),
+                stopwatchTime: 0,
+                timerDuration: 0
+            }) : "";
+            
             const newWidget = { 
                 type, 
-                template: "", 
+                template, 
                 position,
                 id_utilisateur: FIXED_USER_ID 
             };
-            
             const widgetId = await insertWidget(newWidget);
             newWidget.id = widgetId;
             widgets = [...widgets, newWidget];
-            showPopup = false;
         } catch (err) {
             console.error('Failed to add widget:', err);
-            error = 'Failed to add new widget';
         }
     }
 
@@ -125,16 +141,28 @@
 
     async function handleConsider(e) {
         const { items: newWidgets } = e.detail;
-        if (!pendingPositions.length) {
-            pendingPositions = [...widgets];
+        if (!dragStarted) {
+            dragStarted = true;
+            if (!pendingPositions.length) {
+                pendingPositions = [...widgets];
+            }
         }
         widgets = newWidgets;
     }
 
     async function handleFinalize(e) {
         const { items: newWidgets } = e.detail;
+        // Clear any pending drag timeout
+        if (dragTimeout) {
+        clearTimeout(dragTimeout); 
+        }
+        
+        // Add a small delay to ensure proper positioning
+        dragTimeout = setTimeout(() => {
         widgets = newWidgets;
         hasUnsavedChanges = true;
+        dragStarted = false;
+        }, 50);
     }
 
     async function savePositions() {
@@ -162,6 +190,7 @@
 
     // UI helper functions
     function showContextMenu({ widgetId, event }) {
+        event.preventDefault();
         selectedWidgetId = widgetId;
         contextMenuPosition = { x: event.clientX, y: event.clientY };
         contextMenuVisible = true;
@@ -185,10 +214,17 @@
     function toggleFabMenu() {
         isFabMenuOpen = !isFabMenuOpen;
     }
+
+    onDestroy(() => {
+    if (dragTimeout) {
+      clearTimeout(dragTimeout);
+    }
+  });
+
 </script>
 
 {#if $isConnected}
-    <div class="container mx-auto p-4" on:click={hideContextMenu} role="presentation">
+    <div class="container mx-auto p-4" on:click|self={hideContextMenu} role="presentation">
         {#if isLoading}
             <div class="flex justify-center items-center h-64">
                 <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
@@ -217,31 +253,49 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" 
+            <div 
+                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-1 gap-y-2 p-0.5" 
                 use:dndzone={{items: widgets, flipDurationMs, dragDisabled: !isDragEnabled || isEditing}}
                 on:consider={handleConsider}
                 on:finalize={handleFinalize}
-                >
+            >
                 {#each widgets as widget (widget.id)}
-                {#if widget.type === 'note'}
-                    <div class="w-full bg-white rounded-lg shadow-md">
-                        <Note
-                            {widget}
-                            onEdit={editWidget}
-                            onDelete={handleDelete}
-                            onContextMenu={showContextMenu}
-                            isEditing={isEditing && widgetToEdit?.id === widget.id}
-                            bind:widgetToEdit
-                            onSave={editWidget}
-                            onCancel={handleCancel}
-                        />
+                    <div class="flex justify-center items-center p-0.5">
+                        {#if widget.type === 'timer'}
+                            <Timer
+                                {widget}
+                                onEdit={editWidget}
+                                onDelete={handleDelete}
+                                onContextMenu={(event) => showContextMenu({ widgetId: widget.id, event })}
+                                isEditing={isEditing && widgetToEdit?.id === widget.id}
+                                bind:widgetToEdit
+                                onSave={editWidget}
+                                onCancel={handleCancel}
+                            />
+
+                        {:else if widget.type === 'note'}
+                            <Note
+                                {widget}
+                                onEdit={editWidget}
+                                onDelete={handleDelete}
+                                onContextMenu={(event) => showContextMenu({ widgetId: widget.id, event })}
+                                isEditing={isEditing && widgetToEdit?.id === widget.id}
+                                bind:widgetToEdit
+                                onSave={editWidget}
+                                onCancel={handleCancel}
+                            />
+
+                        {:else if widget.type === 'spotify'}
+                            <div class="w-full bg-white rounded-lg shadow-md">
+                                <Spotify
+                                    {widget}
+                                    onEdit={editWidget}
+                                    onDelete={handleDelete}
+                                    onContextMenu={(event) => showContextMenu({ widgetId: widget.id, event })}
+                                />
+                            </div>
+                        {/if}
                     </div>
-                {:else if widget.type === 'spotify'}
-                    <div class="w-full bg-white rounded-lg shadow-md">
-                        <Spotify
-                        />
-                    </div>
-                {/if}
                 {/each}
             </div>
 
@@ -268,21 +322,7 @@
                             </svg>
                             <span>Note</span>
                         </button>
-                        
-                        <!-- Spotify Widget -->
-                        <button 
-                            on:click={() => {
-                                addWidget("spotify");
-                                toggleFabMenu();
-                            }}
-                            class="bg-green-500 hover:bg-green-600 text-white w-48 h-12 rounded-full shadow-lg flex items-center justify-center gap-2 transition-colors duration-200"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
-                            </svg>
-                            <span>Spotify</span>
-                        </button>
-                        
+
                         <!-- Timer Widget -->
                         <button 
                             on:click={() => {
@@ -296,30 +336,53 @@
                             </svg>
                             <span>Timer</span>
                         </button>
+
+                        <!-- Spotify Widget -->
+                        <button 
+                            on:click={() => {
+                                addWidget("spotify");
+                                toggleFabMenu();
+                            }}
+                            class="bg-green-500 hover:bg-green-600 text-white w-48 h-12 rounded-full shadow-lg flex items-center justify-center gap-2 transition-colors duration-200"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                            </svg>
+                            <span>Spotify</span>
+                        </button>
                     </div>
                 {/if}
                 
-                <!-- Main FAB Button -->
-                <button 
+                <!-- FAB Toggle Button -->
+                <button
                     on:click={toggleFabMenu}
-                    class="bg-blue-500 hover:bg-blue-600 text-white w-16 h-16 rounded-full shadow-lg flex items-center justify-center transition-all duration-200 {isFabMenuOpen ? 'rotate-45' : ''}"
-                    title="Add Widget"
-                    aria-label="Add Widget"
+                    class="bg-blue-500 hover:bg-blue-600 w-16 h-16 rounded-full shadow-lg flex items-center justify-center transition-colors duration-200"
+                    aria-label="Toggle FAB Menu"
                 >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    <svg
+                        class="w-8 h-8 text-white transition-transform duration-200"
+                        class:rotate-45={isFabMenuOpen}
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                     </svg>
                 </button>
-            </div>
+        </div>
 
             {#if contextMenuVisible}
-                <ContextMenu 
-                    position={contextMenuPosition} 
-                    onEdit={startEditing}
-                    onDelete={handleDelete} 
-                    widgetId={selectedWidgetId} 
-                />
+                <div class="context-menu">
+                    <ContextMenu 
+                        position={contextMenuPosition}
+                        onEdit={startEditing}
+                        onDelete={handleDelete}
+                        widgetId={selectedWidgetId}
+                        type={widgets.find(w => w.id === selectedWidgetId)?.type}
+                    />
+                </div>
             {/if}
+
         {/if}
     </div>
 {:else}
@@ -330,3 +393,5 @@
         </div>
     </div>
 {/if}
+
+<Notification />
