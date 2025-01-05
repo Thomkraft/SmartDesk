@@ -1,6 +1,7 @@
 <script>
     import { selDate } from "./store.js";
     import { getMonthName } from "./date-helpers.js";
+    import Event from "$lib/Event.svelte";
 
     // Initialize selected date
     let selectedDate = $selDate;
@@ -18,6 +19,8 @@
     </div>
 
     <div id="event-menu-container" class="text-center">
+
+        <Event title="Test" />
 
         <input type="button" id="create-event"
                class="bg-teal-400 text-gray-50 rounded-md text-center my-5 px-3 py-1" value="New Event"/>
