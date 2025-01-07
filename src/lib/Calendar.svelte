@@ -2,7 +2,7 @@
     import { onMount } from "svelte";
     import { toDate, selDate } from "./store.js";
     import { isCurrentDay, isWeekend, getDayName, getMonthName } from "./date-helpers.js";
-    import { generateCalendarData } from "./data-calendar.js";
+    import { generateCalendarData, recoverCalendarEvents } from "./data-calendar.js";
     import { toggleEventMenu } from "./calendar-animation.js";
     import EventMenu from "$lib/EventMenu.svelte";
 
@@ -78,6 +78,9 @@
             // Update data of the calendar
             calendarData = generateCalendarData(todayDate);
             //console.log(calendarData);
+
+            // Recover month events
+            recoverCalendarEvents();
 
             // Update month name
             labMonth.textContent = getMonthName(todayDate) + ", " + todayDate.getFullYear();
