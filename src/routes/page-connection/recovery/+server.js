@@ -15,9 +15,9 @@ export async function POST({ request }) {
         connectTimeout: 5000
     });
 
-    //mettre la bonne url
-    const url = 'http://85.215.130.37:3000/page-connection/recovery';
-
+    const currentUrl = request.url;
+    const url = new URL('/page-connection/recovery', currentUrl).toString().replace('https://', 'http://');
+    
     if (token && password) {
 
 

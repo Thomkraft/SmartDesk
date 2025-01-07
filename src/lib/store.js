@@ -6,6 +6,22 @@ import { writable } from "svelte/store";
 //let isConnected = writable(false);
 export const toDate = writable(new Date(Date.now()));
 export const selDate = writable(new Date(Date.now()));
+export const notification = writable({
+    show: false,
+    message: '',
+    type: ''
+});
+export const timerState = writable({
+    activeTab: 'clock',
+    stopwatchTime: 0,
+    stopwatchRunning: false,
+    timerDuration: 0,
+    timerRemaining: 0,
+    timerRunning: false,
+    hours: 0,
+    minutes: 0,
+    seconds: 0
+});
 
 const isConnected = writable(false);
 

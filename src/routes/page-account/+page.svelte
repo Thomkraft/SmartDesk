@@ -101,6 +101,7 @@
         isNotSamePassword = false;
         isNotActualPassword = false;
     }
+
 </script>
 
 <div class="container mx-auto p-4">

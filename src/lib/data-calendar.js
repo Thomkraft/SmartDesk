@@ -1,3 +1,6 @@
+//import mysql from 'mysql2/promise';
+
+
 function generateCalendarData(currentDate) {
     // Empty existing data
     let calendarData = [];
@@ -58,4 +61,37 @@ function generateCalendarData(currentDate) {
     return calendarData;
 }
 
-export {generateCalendarData};
+async function recoverCalendarEvents() {
+    const mysql = require('mysql2');
+
+    console.log(mysql)
+
+    // Create connection to database
+    const con = await mysql.createConnection({
+        host: '85.215.130.37',
+        user: 'SAE2',
+        password: 'Zao@67.pomme',
+        database: 'smartdesk',
+        connectTimeout: 5000
+    });
+
+    console.log(con);
+
+    try {
+        const [rows] = await con.query(
+            `SELECT id, title, description, event_date 
+             FROM events 
+             WHERE event_date BETWEEN ? AND ?
+             ORDER BY event_date ASC`,
+            [startDate, endDate]
+        );
+
+        console.log(rows);
+    }
+    catch (e) {
+        console.error("Error fetching events : " + e);
+        await con.end();
+    }
+}
+
+export {generateCalendarData, recoverCalendarEvents};
