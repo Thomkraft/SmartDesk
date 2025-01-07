@@ -1,5 +1,6 @@
 import { writable } from "svelte/store";
 
+
 //stock la variable isConnected pour que tous les fichies y est acces
 
 //let isConnected = writable(false);
