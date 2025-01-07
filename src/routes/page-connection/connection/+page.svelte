@@ -11,6 +11,7 @@
 
     // Fonction pour gérer la soumission du formulaire
     async function handleSubmit(event) {
+
         event.preventDefault();
 
         // Appelle l'API avec les données utilisateur
@@ -38,8 +39,8 @@
     }
 </script>
 
-<div class="flex items-center justify-center min-h-96 h-full bg-gray-100">
-    <div class="w-full max-w-md p-8 space-y-6 bg-white rounded shadow-md">
+<div class="flex items-center justify-center h-full bg-gray-100">
+    <div class="items-center justify-center p-8 space-y-6 bg-white rounded shadow-md">
         <h2 class="text-2xl font-bold text-center">Connexion</h2>
         {#if rep === 0}
             <p
@@ -51,7 +52,7 @@
             <p class="bg-red-500 py-2 px-4 rounded text-white mb-4 text-center">
                 {repbody.message}
             </p>
-        {/if}
+        {/if}   
         <form on:submit|preventDefault={handleSubmit} class="space-y-4">
             <div>
                 <label
