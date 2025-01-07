@@ -18,9 +18,9 @@ export const timerState = writable({
     timerDuration: 0,
     timerRemaining: 0,
     timerRunning: false,
-    hours: 0,
-    minutes: 0,
-    seconds: 0
+    hours: null,
+    minutes: null,
+    seconds: null
 });
 
 const isConnected = writable(false);
