@@ -1,6 +1,3 @@
-import mysql from 'mysql2/promise';
-
-
 function generateCalendarData(currentDate) {
     // Empty existing data
     let calendarData = [];
@@ -61,36 +58,47 @@ function generateCalendarData(currentDate) {
     return calendarData;
 }
 
-async function recoverCalendarEvents() {
-    const mysql = require('mysql2');
-
-    console.log(mysql)
-
-    // Create connection to database
-    const con = await mysql.createConnection({
-        host: '85.215.130.37',
-        user: 'SAE2',
-        password: 'Zao@67.pomme',
-        database: 'smartdesk',
-        connectTimeout: 5000
+async function recoverCalendarEvents(monthData) {
+    const response = await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(),
     });
 
-    console.log(con);
+    if (response.ok) {
+        // Get data in json format
+        const { eventsData } = await response.json();
 
-    try {
-        const [rows] = await con.query(
-            `SELECT id, title, description, event_date 
-             FROM events 
-             WHERE event_date BETWEEN ? AND ?
-             ORDER BY event_date ASC`,
-            [startDate, endDate]
-        );
+        console.log(monthData)
 
-        console.log(rows);
+        // Check if month day contain events
+        for (let md = 0; md < 35; md++) {
+            const monthDate =
+                monthData[md].year + "-" +
+                ("0" + monthData[md].month).slice(-2) + "-" +
+                ("0" + monthData[md].day).slice(-2);
+
+            for (let event in eventsData) {
+                const eventDate = eventsData[event].date_debut.slice(0, 10);
+
+                //console.log(eventDate);
+
+                if (eventDate === monthDate) {
+                    console.log("FOUND ! " + monthDate + " " + eventDate);
+
+                    // monthDate[md].events.push({
+                    //     title: eventDate[event].title
+                    // })
+                    //
+                    // console.log(monthDate[md])
+                }
+
+            }
+        }
+
     }
-    catch (e) {
-        console.error("Error fetching events : " + e);
-        await con.end();
+    else {
+        throw Error("Failed to recover calendar events");
     }
 }
 

@@ -77,7 +77,9 @@
         function updateCalendar() {
             // Update data of the calendar
             calendarData = generateCalendarData(todayDate);
-            //console.log(calendarData);
+
+            // Recover month events
+            recoverCalendarEvents(calendarData);
 
             // Recover month events
             recoverCalendarEvents();
