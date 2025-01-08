@@ -4,6 +4,7 @@
     import Note from "$lib/Note.svelte";
     import Spotify from "$lib/Spotify.svelte";
     import Timer from "$lib/Timer.svelte";
+    import Calculatrice from "$lib/Calculatrice.svelte";
     import { getWidgetsByUserId, insertWidget, updateWidget, deleteWidget } from '$lib/widgetService';
     import { getUserData } from '$lib/store.js';
     import { isConnected } from '$lib/store.js';
@@ -286,7 +287,7 @@
                             />
 
                         {:else if widget.type === 'spotify'}
-                            <div class="w-full bg-white rounded-lg shadow-md">
+                            <div class="h-[500px] w-[400px] shadow-[0_-1px_1px_0_rgba(0,255,255,1),1px_0_1px_0_rgba(0,255,255,1)]">
                                 <Spotify
                                     {widget}
                                     onEdit={editWidget}
@@ -294,6 +295,13 @@
                                     onContextMenu={(event) => showContextMenu({ widgetId: widget.id, event })}
                                 />
                             </div>
+                        {:else if widget.type === 'calculatrice'}
+                            <Calculatrice
+                                {widget}
+                                onEdit={editWidget}
+                                onDelete={handleDelete}
+                                onContextMenu={(event) => showContextMenu({ widgetId: widget.id, event })}
+                            />
                         {/if}
                     </div>
                 {/each}
@@ -349,6 +357,20 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
                             </svg>
                             <span>Spotify</span>
+                        </button>
+
+                        <!-- Calculatrice Widget -->
+                        <button 
+                            on:click={() => {
+                                addWidget("calculatrice");
+                                toggleFabMenu();
+                            }}
+                            class="bg-orange-500 hover:bg-orange-600 text-white w-48 h-12 rounded-full shadow-lg flex items-center justify-center gap-2 transition-colors duration-200"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10H9m3-5h3M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <span>Calculatrice</span>
                         </button>
                     </div>
                 {/if}
