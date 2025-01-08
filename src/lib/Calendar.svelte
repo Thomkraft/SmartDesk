@@ -1,16 +1,18 @@
 <script>
     import { onMount } from "svelte";
-    import { toDate, selDate } from "./store.js";
+    import { toDate, selDate, calendarData } from "./store.js";
     import { isCurrentDay, isWeekend, getDayName, getMonthName } from "./date-helpers.js";
     import { generateCalendarData, recoverCalendarEvents } from "./data-calendar.js";
     import { toggleEventMenu } from "./calendar-animation.js";
     import EventMenu from "$lib/EventMenu.svelte";
+    import Event from "$lib/Event.svelte";
 
 
     let calendarNav;
     let calendarDaysName;
     let calendar;
-    let calendarData = [];
+    //let calendarData = [];
+    let eventMenuComponent;
     let showEventMenu = false;
 
     // Initialize current date
@@ -76,13 +78,17 @@
         // Update the calendar when select next or previous month
         function updateCalendar() {
             // Update data of the calendar
-            calendarData = generateCalendarData(todayDate);
+            $calendarData = generateCalendarData(todayDate);
 
             // Recover month events
-            recoverCalendarEvents(calendarData);
+            const calendarDataPromise = recoverCalendarEvents($calendarData);
 
-            // Recover month events
-            recoverCalendarEvents();
+            calendarDataPromise.then((monthData) => {
+                $calendarData = monthData;
+
+            }).catch((err) => {
+                console.log(err);
+            })
 
             // Update month name
             labMonth.textContent = getMonthName(todayDate) + ", " + todayDate.getFullYear();
@@ -106,10 +112,10 @@
             //console.log("FIRST DAY : " + firstDayIndex + " LAST DAY : " + lastDayIndex);
 
             // Add all days of the month
-            for (let day = 0; day <= 34; day++) {
-                const dayNumber = calendarData[day].day;
-                const dayMonth = calendarData[day].month;
-                const dayYear = calendarData[day].year;
+            for (let day = 0; day < 35; day++) {
+                const dayNumber = $calendarData[day].day;
+                const dayMonth = $calendarData[day].month;
+                const dayYear = $calendarData[day].year;
 
                 // Update the date of the day
                 const dayDate = new Date(dayYear + "-" + dayMonth + "-" + dayNumber);
@@ -136,7 +142,7 @@
             allDays.forEach((dayElement, index) => {
                 dayElement.addEventListener("click", () => {
                     // Open event menu on second click
-                    if (calendarData[index].selected) {
+                    if ($calendarData[index].selected) {
 
                         toggleEventMenu();
 
@@ -145,19 +151,19 @@
                         // Apply CSS to selected day
                     } else {
                         // Set selected date
-                        selectedDate.setDate(calendarData[index].day);
-                        selectedDate.setMonth(calendarData[index].month - 1);
-                        selectedDate.setFullYear(calendarData[index].year);
+                        selectedDate.setDate($calendarData[index].day);
+                        selectedDate.setMonth($calendarData[index].month - 1);
+                        selectedDate.setFullYear($calendarData[index].year);
                         selDate.set(selectedDate);
 
-                        // Update date of event menu header
-                        updateEventMenuHeader();
+                        // Update date of event menu
+                        updateEventMenu();
 
                         // Reset selection
-                        calendarData.forEach(day => day.selected = false);
+                        $calendarData.forEach(day => day.selected = false);
 
                         // Mark selected day
-                        calendarData[index].selected = true;
+                        $calendarData[index].selected = true;
 
                         // Apply CSS
                         allDays.forEach(d => d.classList.remove("bg-gray-200"));
@@ -170,7 +176,8 @@
         }
 
         // Update date of event menu header
-        function updateEventMenuHeader() {
+        function updateEventMenu() {
+            // Display date on event menu header
             const eventMenuHeader = document.getElementById("event-menu-header");
             const headerTitle =
                 getMonthName(selectedDate) + " " +
@@ -178,6 +185,14 @@
 
             eventMenuHeader.innerHTML = `<h1>${headerTitle} events</h1>`;
 
+            // Display selected date events
+            const eventMenuContainer = document.getElementById("event-menu-container");
+            console.log(eventMenuContainer);
+
+            const selDateDay = selectedDate.getDate();
+            const selDateEvents = $calendarData[selDateDay + 1].events;
+
+            console.log(selDateEvents);
         }
 
         // Update elements on start
@@ -217,7 +232,7 @@
 
 </div>
 
-<EventMenu/>
+<EventMenu bind:this={eventMenuComponent} />
 
 
 

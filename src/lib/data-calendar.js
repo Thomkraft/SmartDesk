@@ -1,3 +1,6 @@
+import { sqlDateToJsDate } from '$lib/date-helpers.js';
+
+
 function generateCalendarData(currentDate) {
     // Empty existing data
     let calendarData = [];
@@ -52,6 +55,7 @@ function generateCalendarData(currentDate) {
             month: dayMonth,
             year: dayYear,
             selected: false,
+            events: []
         });
     }
 
@@ -69,33 +73,42 @@ async function recoverCalendarEvents(monthData) {
         // Get data in json format
         const { eventsData } = await response.json();
 
-        console.log(monthData)
-
         // Check if month day contain events
         for (let md = 0; md < 35; md++) {
-            const monthDate =
-                monthData[md].year + "-" +
-                ("0" + monthData[md].month).slice(-2) + "-" +
-                ("0" + monthData[md].day).slice(-2);
+            const monthDate = new Date(
+                monthData[md].year,
+                monthData[md].month - 1,
+                monthData[md].day
+            );
 
             for (let event in eventsData) {
-                const eventDate = eventsData[event].date_debut.slice(0, 10);
+                // Get event date and format day
+                let [year, month, day] = sqlDateToJsDate(eventsData[event].date_debut);
+                const eventStartDate = new Date(year, month - 1, day);
 
-                //console.log(eventDate);
+                [year, month, day] = sqlDateToJsDate(eventsData[event].date_fin);
+                const eventEndDate = new Date(year, month - 1, day);
 
-                if (eventDate === monthDate) {
-                    console.log("FOUND ! " + monthDate + " " + eventDate);
+                const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
 
-                    // monthDate[md].events.push({
-                    //     title: eventDate[event].title
-                    // })
-                    //
-                    // console.log(monthDate[md])
+                // console.log(monthDate);
+                // console.log(eventStartDate)
+                // console.log(eventEndDate)
+
+                if (monthDate >= eventStartDate && monthDate <= eventEndDate) {
+                    // Add event to monthData
+                    monthData[md].events.push({
+                        title: eventsData[event].titre,
+                        startDate: eventStartDate.toLocaleDateString("en-US"),
+                        endDate: eventEndDate.getDay(),
+                        startTime: eventsData[event].heure_debut,
+                        endTime: eventsData[event].heure_fin,
+                        description: eventsData[event].description,
+                    })
                 }
-
             }
         }
-
+        return monthData;
     }
     else {
         throw Error("Failed to recover calendar events");

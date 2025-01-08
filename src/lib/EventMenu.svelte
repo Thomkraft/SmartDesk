@@ -1,5 +1,5 @@
 <script>
-    import { selDate } from "./store.js";
+    import { selDate, calendarData } from "./store.js";
     import { getMonthName } from "./date-helpers.js";
     import Event from "$lib/Event.svelte";
 
@@ -11,6 +11,10 @@
         getMonthName(selectedDate) + " " +
         selectedDate.getDate();
 
+    // Recover month events
+
+
+
 </script>
 
 <div id="event-menu" class="hidden max-lg:fixed max-lg:border-l-2 max-lg:border-gray-300 w-full max-w-md h-full right-0 bg-gray-50 transition-all duration-500 ease-out">
@@ -20,9 +24,20 @@
 
     <div id="event-menu-container" class="text-center">
 
-        <Event title="Test" />
+        {#if $calendarData.length > 0}
+            {#each $calendarData[selectedDate.getDate() + 1].events as event, index}
+                <Event
+                        title={event.title}
+                        startDate={event.startDate}
+                        endDate={event.endDate}
+                        startTime={event.startTime}
+                        endTime={event.endTime}
+                        description={event.description}
+                />
+            {/each}
+        {/if}
 
-        <input type="button" id="create-event"
+        <input type="button" id="create-event-btn"
                class="bg-teal-400 text-gray-50 rounded-md text-center my-5 px-3 py-1" value="New Event"/>
 
     </div>
