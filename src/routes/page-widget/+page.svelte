@@ -126,6 +126,8 @@
     async function handleDelete(id) {
         try {
             await deleteWidget(id);
+            const widget = widgets.find(w => w.id === id);
+            widget.type === 'spotify' ? hasSpotify = false : widget.type === 'timer' ? hasTimer = false : "";
             widgets = widgets.filter(widget => widget.id !== id);
             hideContextMenu();
         } catch (err) {
