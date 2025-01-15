@@ -3,6 +3,9 @@ import { writable } from "svelte/store";
 
 //stock la variable isConnected pour que tous les fichies y est acces
 
+// Calendar data
+export const calendarData = writable([]);
+
 //let isConnected = writable(false);
 export const toDate = writable(new Date(Date.now()));
 export const selDate = writable(new Date(Date.now()));

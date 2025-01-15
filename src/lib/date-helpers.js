@@ -30,5 +30,20 @@ const getDayName = day => {
     return new Intl.DateTimeFormat("en-US", options).format(date);
 }
 
+const sqlDateToJsDate = (date) => {
+    const [y, m, d] = date.slice(0, 10).split("-");
+
+    const year = y;
+    let month = m;
+    let day = d;
+
+    month = month < 10 ? month.slice(1, 2) : month;
+    day = day < 10 ? day.slice(1, 2) : day;
+
+    day = (parseInt(day) + 1).toString();
+
+    return [year, month, day];
+}
+
 // Export all functions
-export { isCurrentDay, isWeekend, getDayName, getMonthName };
+export { isCurrentDay, isWeekend, getDayName, getMonthName, sqlDateToJsDate };

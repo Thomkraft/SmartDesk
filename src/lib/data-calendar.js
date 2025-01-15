@@ -1,4 +1,4 @@
-//import mysql from 'mysql2/promise';
+import { sqlDateToJsDate } from '$lib/date-helpers.js';
 
 
 function generateCalendarData(currentDate) {
@@ -55,42 +55,63 @@ function generateCalendarData(currentDate) {
             month: dayMonth,
             year: dayYear,
             selected: false,
+            events: []
         });
     }
 
     return calendarData;
 }
 
-async function recoverCalendarEvents() {
-    const mysql = require('mysql2');
-
-    console.log(mysql)
-
-    // Create connection to database
-    const con = await mysql.createConnection({
-        host: '85.215.130.37',
-        user: 'SAE2',
-        password: 'Zao@67.pomme',
-        database: 'smartdesk',
-        connectTimeout: 5000
+async function recoverCalendarEvents(monthData) {
+    const response = await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(),
     });
 
-    console.log(con);
+    if (response.ok) {
+        // Get data in json format
+        const { eventsData } = await response.json();
 
-    try {
-        const [rows] = await con.query(
-            `SELECT id, title, description, event_date 
-             FROM events 
-             WHERE event_date BETWEEN ? AND ?
-             ORDER BY event_date ASC`,
-            [startDate, endDate]
-        );
+        // Check if month day contain events
+        for (let md = 0; md < 35; md++) {
+            const monthDate = new Date(
+                monthData[md].year,
+                monthData[md].month - 1,
+                monthData[md].day
+            );
 
-        console.log(rows);
+            for (let event in eventsData) {
+                // Get event date and format day
+                let [year, month, day] = sqlDateToJsDate(eventsData[event].date_debut);
+                const eventStartDate = new Date(year, month - 1, day);
+
+                [year, month, day] = sqlDateToJsDate(eventsData[event].date_fin);
+                const eventEndDate = new Date(year, month - 1, day);
+
+                const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
+
+                // console.log(monthDate);
+                // console.log(eventStartDate)
+                // console.log(eventEndDate)
+
+                if (monthDate >= eventStartDate && monthDate <= eventEndDate) {
+                    // Add event to monthData
+                    monthData[md].events.push({
+                        title: eventsData[event].titre,
+                        startDate: eventStartDate.toLocaleDateString("en-US"),
+                        endDate: eventEndDate.getDay(),
+                        startTime: eventsData[event].heure_debut,
+                        endTime: eventsData[event].heure_fin,
+                        description: eventsData[event].description,
+                    })
+                }
+            }
+        }
+        return monthData;
     }
-    catch (e) {
-        console.error("Error fetching events : " + e);
-        await con.end();
+    else {
+        throw Error("Failed to recover calendar events");
     }
 }
 
