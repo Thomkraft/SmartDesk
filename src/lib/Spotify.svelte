@@ -121,6 +121,7 @@
                     headers: { Authorization: `Bearer ${accessToken}` },
                 },
             );
+            
 
             if (response.status === 204) {
                 noPlayback = true;
@@ -226,7 +227,7 @@
 </script>
 
 <div
-    class="bg-gray-800 p-2.5 rounded-lg text-white select-none"
+    class="bg-gray-800 h-full w-full flex flex-col"
     role="button"
     tabindex="0"
     on:dblclick={openSpotifyPopup}
@@ -308,5 +309,9 @@
     :global(svg) {
         width: 24px;
         height: 24px;
+    }
+    .album-cover {
+        max-height: 200px;
+        width: auto;
     }
 </style>
