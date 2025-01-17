@@ -2,7 +2,7 @@
     import { onMount } from "svelte";
     import { toDate, selDate, calendarData } from "./store.js";
     import { isCurrentDay, isWeekend, getDayName, getMonthName } from "./date-helpers.js";
-    import { generateCalendarData, recoverCalendarEvents } from "./data-calendar.js";
+    import { generateCalendarData, recoverCalendarEvents, containsEvents } from "./data-calendar.js";
     import { toggleEventMenu } from "./calendar-animation.js";
     import EventMenu from "$lib/EventMenu.svelte";
     import Event from "$lib/Event.svelte";
@@ -20,6 +20,20 @@
     let selectedDate = $selDate;
 
     onMount(() => {
+        // Update data of the calendar
+        $calendarData = generateCalendarData(todayDate);
+
+        // Recover month events
+        const calendarDataPromise = recoverCalendarEvents($calendarData);
+
+        calendarDataPromise.then((monthData) => {
+            $calendarData = monthData;
+            updateCalendar()
+
+        }).catch((err) => {
+            console.log(err);
+        })
+
         calendar = document.getElementById("calendar");
 
         // Get current month name
@@ -36,6 +50,9 @@
             //console.log("test previous");
             todayDate.setMonth(todayDate.getMonth() - 1);
             toDate.set(todayDate);
+
+            $calendarData = generateCalendarData(todayDate);
+            recoverEvents();
             updateCalendar();
         })
 
@@ -43,6 +60,9 @@
             //console.log("test next");
             todayDate.setMonth(todayDate.getMonth() + 1);
             toDate.set(todayDate);
+
+            $calendarData = generateCalendarData(todayDate);
+            recoverEvents();
             updateCalendar();
         })
 
@@ -54,10 +74,9 @@
             toDate.set(todayDate);
             //selectedDate = todayDate;
 
+            $calendarData = generateCalendarData(todayDate);
+            recoverEvents();
             updateCalendar();
-
-            // Update date of event menu header
-            //updateEventMenuHeader();
         })
 
         // Display all days name
@@ -75,20 +94,25 @@
             );
         }
 
-        // Update the calendar when select next or previous month
-        function updateCalendar() {
-            // Update data of the calendar
-            $calendarData = generateCalendarData(todayDate);
+        // Update UI Calendar
+        updateCalendar()
 
+        // Recover events of the current month
+        async function recoverEvents() {
             // Recover month events
             const calendarDataPromise = recoverCalendarEvents($calendarData);
 
             calendarDataPromise.then((monthData) => {
                 $calendarData = monthData;
+                updateCalendar();
 
             }).catch((err) => {
                 console.log(err);
             })
+        }
+
+        // Update the calendar when select next or previous month
+        function updateCalendar() {
 
             // Update month name
             labMonth.textContent = getMonthName(todayDate) + ", " + todayDate.getFullYear();
@@ -124,12 +148,16 @@
                 const currentDay = isCurrentDay(dayDate);
 
                 // Test if the day is a weekend
-                const weekend = isWeekend(day + 1);
+                const weekend = false;
+
+                // Test if the day contains events
+                let hasEvents = $calendarData[day]?.events && $calendarData[day].events.length > 0;
 
                 // Insert the day into the DOM tree
                 calendar.insertAdjacentHTML(
                     "beforeend",
                     `<div class="day ${weekend ? `${currentDay ? 'text-blue-700' : ' text-blue-400'}` : ""}
+                    ${hasEvents ? 'bg-yellow-200' : ''}
                     flex justify-center text-center pt-2 pb-2 border-r-2 border-b-2 border-gray-300 select-none">
                         <p class="${currentDay ? " self-start min-w-8 px-2 py-1 bg-teal-400 rounded-full" : "px-2 py-1"}">${dayNumber}</p>
                     </div>`
@@ -195,8 +223,8 @@
             console.log(selDateEvents);
         }
 
-        // Update elements on start
-        updateCalendar();
+        // // Update elements on start
+        // updateCalendar();
     });
 </script>
 
