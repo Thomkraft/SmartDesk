@@ -148,7 +148,7 @@
                 const currentDay = isCurrentDay(dayDate);
 
                 // Test if the day is a weekend
-                const weekend = false;
+                const weekend = isWeekend(day + 1);
 
                 // Test if the day contains events
                 let hasEvents = $calendarData[day]?.events && $calendarData[day].events.length > 0;
