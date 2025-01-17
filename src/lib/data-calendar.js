@@ -1,4 +1,5 @@
 import { sqlDateToJsDate } from '$lib/date-helpers.js';
+import { calendarData } from "./store.js";
 
 
 function generateCalendarData(currentDate) {
@@ -63,15 +64,17 @@ function generateCalendarData(currentDate) {
 }
 
 async function recoverCalendarEvents(monthData) {
-    const response = await fetch("/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(),
-    });
+    try {
+        const response = await fetch("/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(),
+        });
 
-    if (response.ok) {
+        if (!response.ok)  throw new Error('Failed to fetch events');
+
         // Get data in json format
-        const { eventsData } = await response.json();
+        const {eventsData} = await response.json();
 
         // Check if month day contain events
         for (let md = 0; md < 35; md++) {
@@ -89,7 +92,7 @@ async function recoverCalendarEvents(monthData) {
                 [year, month, day] = sqlDateToJsDate(eventsData[event].date_fin);
                 const eventEndDate = new Date(year, month - 1, day);
 
-                const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
+                const dateOptions = {weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'}
 
                 // console.log(monthDate);
                 // console.log(eventStartDate)
@@ -99,8 +102,8 @@ async function recoverCalendarEvents(monthData) {
                     // Add event to monthData
                     monthData[md].events.push({
                         title: eventsData[event].titre,
-                        startDate: eventStartDate.toLocaleDateString("en-US"),
-                        endDate: eventEndDate.getDay(),
+                        startDate: eventStartDate.toLocaleDateString("en-US", dateOptions),
+                        endDate: eventEndDate.toLocaleDateString("en-US", dateOptions),
                         startTime: eventsData[event].heure_debut,
                         endTime: eventsData[event].heure_fin,
                         description: eventsData[event].description,
@@ -108,11 +111,18 @@ async function recoverCalendarEvents(monthData) {
                 }
             }
         }
+        console.log(monthData);
         return monthData;
     }
-    else {
-        throw Error("Failed to recover calendar events");
+    catch (error) {
+        console.log('Error recovering events:', error);
+        throw error;
     }
 }
 
-export {generateCalendarData, recoverCalendarEvents};
+async function containsEvents(monthData, day) {
+    console.log(monthData[day]);
+    console.log( "DAY : ", day)
+}
+
+export {generateCalendarData, recoverCalendarEvents, containsEvents};

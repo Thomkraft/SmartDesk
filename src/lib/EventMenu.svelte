@@ -11,10 +11,6 @@
         getMonthName(selectedDate) + " " +
         selectedDate.getDate();
 
-    // Recover month events
-
-
-
 </script>
 
 <div id="event-menu" class="hidden max-lg:fixed max-lg:border-l-2 max-lg:border-gray-300 w-full max-w-md h-full right-0 bg-gray-50 transition-all duration-500 ease-out">
