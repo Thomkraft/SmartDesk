@@ -3,8 +3,8 @@ import mysql from 'mysql2/promise';
 
 export async function POST({ request }) {
     try {
-        // Get user ID
-        const { userId } = await request.json();
+        // Get data
+        const { userId, title, startDate, endDate, startTime, endTime, description } = await request.json();
 
         if (!userId) {
             return new Response(
@@ -23,14 +23,15 @@ export async function POST({ request }) {
         });
 
         const [rows] = await con.query(
-            'SELECT * FROM evenement WHERE id_utilisateur = ?', [userId]
+            'INSERT INTO evenement (titre, description, date_debut, date_fin, heure_debut, heure_fin, id_utilisateur) VALUES (?,?,?,?,?,?,?)',
+            [title], [description], [startDate], [endDate], [startTime], [endTime], [userId]
         );
 
         await con.end();
 
         return new Response(
             JSON.stringify({
-                message: 'Informations mises à jour avec succès.',
+                message: 'Update informations success.',
                 eventsData: rows
             }),
             { status: 200 }

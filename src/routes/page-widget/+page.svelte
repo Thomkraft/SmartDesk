@@ -11,6 +11,7 @@
     import { fade } from 'svelte/transition';
     import { onDestroy, onMount } from 'svelte';
     import Notification from '$lib/Notification.svelte';
+    import Footer from '$lib/Footer.svelte';
     
 
     // State variables
@@ -425,5 +426,6 @@
         </div>
     </div>
 {/if}
+
 
 <Notification />
