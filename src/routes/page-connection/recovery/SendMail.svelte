@@ -21,7 +21,7 @@
     };
 </script>
 
-<div class="flex items-center justify-center min-h-96 h-full bg-gray-100">
+<div class="flex-grow flex items-center justify-center min-h-96 h-full bg-gray-100">
     <div class="bg-white p-8 rounded shadow-md w-full max-w-md">
         <h1 class="text-2xl font-bold mb-6">Récuperation de compte</h1>
         {#if rep === 0}
