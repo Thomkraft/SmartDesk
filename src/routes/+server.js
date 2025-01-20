@@ -1,7 +1,18 @@
 import mysql from 'mysql2/promise';
+import { getUserData } from "$lib/store.js";
 
-export async function POST() {
+export async function POST({ request }) {
     try {
+        // Get user ID
+        const { userId } = await request.json();
+
+        if (!userId) {
+            return new Response(
+                JSON.stringify({ message: 'User ID is missing.' }),
+                { status: 400 }
+            );
+        }
+
         // Create connection to database
         const con = await mysql.createConnection({
             host: '85.215.130.37',
@@ -11,18 +22,9 @@ export async function POST() {
             connectTimeout: 5000
         });
 
-        console.log("Database connected");
-
-        // const [rows] = await con.query(
-        //     `SELECT titre, description, date_debut, date_fin, heure_debut, heure_fin
-        //      FROM events`
-        //     //  WHERE event_date BETWEEN ? AND ?
-        //     //  ORDER BY event_date ASC`,
-        //     // [startDate, endDate]
-        // );
-
         const [rows] = await con.query(
-            'SELECT titre, description, date_debut, date_fin, heure_debut, heure_fin FROM evenement');
+            'SELECT * FROM evenement WHERE id_utilisateur = ?', [userId]
+        );
 
         await con.end();
 
