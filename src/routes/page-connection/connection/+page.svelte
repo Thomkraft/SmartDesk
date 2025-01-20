@@ -39,8 +39,8 @@
     }
 </script>
 
-<div class="flex items-center justify-center h-full bg-gray-100">
-    <div class="items-center justify-center p-8 space-y-6 bg-white rounded shadow-md">
+<div class="flex items-center justify-center min-h-96 h-full bg-gray-100">
+    <div class="w-full max-w-md p-8 space-y-6 bg-white rounded shadow-md">
         <h2 class="text-2xl font-bold text-center">Connexion</h2>
         {#if rep === 0}
             <p

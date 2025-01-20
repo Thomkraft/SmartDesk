@@ -185,7 +185,7 @@
         </section>
 
     {:else}
-        <div class="flex flex-col items-center h-full bg-gray-100">
+        <div class="flex flex-col items-center h-full">
 
             <h1 class="text-3xl font-bold text-center my-8">Bienvenue voyageur du futur</h1>
 
