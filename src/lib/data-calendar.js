@@ -1,5 +1,4 @@
 import { sqlDateToJsDate } from '$lib/date-helpers.js';
-import { calendarData } from "./store.js";
 
 
 function generateCalendarData(currentDate) {
@@ -64,11 +63,14 @@ function generateCalendarData(currentDate) {
 }
 
 async function recoverCalendarEvents(monthData) {
+
+    const currentUserId = localStorage.getItem("id");
+
     try {
         const response = await fetch("/", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(),
+            body: JSON.stringify({ userId: currentUserId }),
         });
 
         if (!response.ok)  throw new Error('Failed to fetch events');
@@ -111,7 +113,6 @@ async function recoverCalendarEvents(monthData) {
                 }
             }
         }
-        console.log(monthData);
         return monthData;
     }
     catch (error) {
