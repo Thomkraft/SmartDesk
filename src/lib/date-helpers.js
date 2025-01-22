@@ -42,6 +42,8 @@ const sqlDateToJsDate = (date) => {
 
     day = (parseInt(day) + 1).toString();
 
+    console.log(day)
+    
     return [year, month, day];
 }
 
