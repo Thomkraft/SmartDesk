@@ -65,6 +65,12 @@
         }
     }
 
+    $: dayIndex = $calendarData.findIndex(day => 
+        day.day === selectedDate.getDate() &&
+        day.month === (selectedDate.getMonth() + 1) &&
+        day.year === selectedDate.getFullYear()
+    );
+
 </script>
 
 <div id="event-menu" class="hidden max-lg:fixed max-lg:border-l-2 max-lg:border-gray-300 w-full max-w-md h-full right-0 bg-gray-50 transition-all duration-500 ease-out">
@@ -74,8 +80,8 @@
 
     <div id="event-menu-container" bind:this={eventMenuContainer} class="text-center">
 
-        {#if $calendarData.length > 0}
-            {#each $calendarData[selectedDate.getDate() + 1].events as event}
+        {#if $calendarData.length > 0 && dayIndex !== -1}
+            {#each $calendarData[dayIndex].events as event}
                 <Event
                         eventId={event.idEvent}
                         title={event.title}

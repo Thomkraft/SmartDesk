@@ -114,7 +114,6 @@ async function recoverCalendarEvents(monthData) {
                 }
             }
         }
-        console.log(monthData);
         return monthData;
     }
     catch (error) {
