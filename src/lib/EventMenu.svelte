@@ -29,11 +29,20 @@
 
         const currentUserId = localStorage.getItem("id");
 
+        // Control data
+        titleEvent = titleEvent.value;
+        startDateEvent = startDateEvent.value;
+        endDateEvent = endDateEvent.value;
+        startTimeEvent = startTimeEvent.value;
+        endTimeEvent = endTimeEvent.value;
+        descriptionEvent = descriptionEvent.value;
+
         try {
             const response = await fetch("/events/", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({
+                    action: "createEvent",
                     userId: currentUserId,
                     title: titleEvent,
                     startDate: startDateEvent,
@@ -44,12 +53,18 @@
                 }),
             });
 
-            if (!response.ok) throw new Error('Failed to fetch events');
+            if (!response.ok) {
+                throw new Error('Failed to fetch events');
+            }
+
+            // Reload page
+            window.location.reload();
         }
         catch (error) {
             console.error(error);
         }
     }
+
 </script>
 
 <div id="event-menu" class="hidden max-lg:fixed max-lg:border-l-2 max-lg:border-gray-300 w-full max-w-md h-full right-0 bg-gray-50 transition-all duration-500 ease-out">
@@ -62,6 +77,7 @@
         {#if $calendarData.length > 0}
             {#each $calendarData[selectedDate.getDate() + 1].events as event}
                 <Event
+                        eventId={event.idEvent}
                         title={event.title}
                         startDate={event.startDate}
                         endDate={event.endDate}
@@ -75,9 +91,9 @@
         <input type="button" id="create-event-btn" bind:this={createEventBtn}
                class="bg-teal-400 text-gray-50 rounded-md text-center my-5 px-3 py-1" value="New Event"
                on:click={() => {
-                eventMenuContainer.classList.add("hidden");
-                createEventContainer.classList.remove("hidden");
-                console.log("test");}}
+                    eventMenuContainer.classList.add("hidden");
+                    createEventContainer.classList.remove("hidden");
+               }}
         />
     </div>
 
