@@ -32,7 +32,6 @@ const getDayName = day => {
 
 const sqlDateToJsDate = (date) => {
     const [y, m, d] = date.slice(0, 10).split("-");
-
     const year = y;
     let month = m;
     let day = d;
@@ -42,8 +41,6 @@ const sqlDateToJsDate = (date) => {
 
     day = (parseInt(day) + 1).toString();
 
-    console.log(day)
-    
     return [year, month, day];
 }
 

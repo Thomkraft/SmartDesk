@@ -89,6 +89,8 @@ async function recoverCalendarEvents(monthData) {
             for (let event in eventsData) {
                 // Get event date and format day
                 let [year, month, day] = sqlDateToJsDate(eventsData[event].date_debut);
+                console.log("date début :", eventsData[event].date_debut);
+                console.log(day);
                 const eventStartDate = new Date(year, month - 1, day);
 
                 [year, month, day] = sqlDateToJsDate(eventsData[event].date_fin);
