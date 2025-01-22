@@ -151,15 +151,21 @@
                 const weekend = isWeekend(day + 1);
 
                 // Test if the day contains events
-                let hasEvents = $calendarData[day]?.events && $calendarData[day].events.length > 0;
+                //let hasEvents = $calendarData[day]?.events && $calendarData[day].events.length > 0;
+                const nbEvents = $calendarData[day].events.length;
 
                 // Insert the day into the DOM tree
                 calendar.insertAdjacentHTML(
                     "beforeend",
                     `<div class="day ${weekend ? `${currentDay ? 'text-blue-700' : ' text-blue-400'}` : ""}
-                    ${hasEvents ? 'bg-yellow-200' : ''}
-                    flex justify-center text-center pt-2 pb-2 border-r-2 border-b-2 border-gray-300 select-none">
-                        <p class="${currentDay ? " self-start min-w-8 px-2 py-1 bg-teal-400 rounded-full" : "px-2 py-1"}">${dayNumber}</p>
+                        flex flex-col justify-center text-center border-r-2 border-b-2 border-gray-300 select-none">
+
+                        <div class="${currentDay ? "self-center px-3 py-2 bg-teal-400 rounded-full" : "px-2 py-1"} relative">
+                            <p>${dayNumber}</p>
+
+                            ${nbEvents > 0 ? `<span class="${currentDay ? "bg-white" : "bg-teal-500"}
+                            mt-0.5 absolute -translate-x-1/2 w-1.5 h-1.5 rounded-full m-auto"></span>` : ""}
+                        </div>
                     </div>`
                 );
             }
@@ -212,15 +218,6 @@
                 selectedDate.getDate();
 
             eventMenuHeader.innerHTML = `<h1>${headerTitle} events</h1>`;
-
-            // Display selected date events
-            const eventMenuContainer = document.getElementById("event-menu-container");
-            console.log(eventMenuContainer);
-
-            const selDateDay = selectedDate.getDate();
-            const selDateEvents = $calendarData[selDateDay + 1].events;
-
-            console.log(selDateEvents);
         }
 
         // // Update elements on start

@@ -103,6 +103,7 @@ async function recoverCalendarEvents(monthData) {
                 if (monthDate >= eventStartDate && monthDate <= eventEndDate) {
                     // Add event to monthData
                     monthData[md].events.push({
+                        idEvent: eventsData[event].id_evenement,
                         title: eventsData[event].titre,
                         startDate: eventStartDate.toLocaleDateString("en-US", dateOptions),
                         endDate: eventEndDate.toLocaleDateString("en-US", dateOptions),
@@ -113,6 +114,7 @@ async function recoverCalendarEvents(monthData) {
                 }
             }
         }
+        console.log(monthData);
         return monthData;
     }
     catch (error) {

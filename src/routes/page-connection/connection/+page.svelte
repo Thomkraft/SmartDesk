@@ -1,6 +1,5 @@
 <script>
-    import { onMount } from "svelte";
-    import axios from "axios";
+    import Footer from "$lib/Footer.svelte";
     import { goto } from "$app/navigation";
     import { isConnected, getUserData,saveUserData } from "$lib/store.js";
 
@@ -87,4 +86,8 @@
             >Mot de passe oublié</button
         >
     </div>
+
+
 </div>
+
+<Footer />

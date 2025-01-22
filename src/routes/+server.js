@@ -1,5 +1,5 @@
 import mysql from 'mysql2/promise';
-import { getUserData } from "$lib/store.js";
+
 
 export async function POST({ request }) {
     try {
