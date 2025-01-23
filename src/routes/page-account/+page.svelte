@@ -22,10 +22,10 @@
     let isSameEmail = false;
     let isNotSamePassword = false;
     let isNotActualPassword = false;
+    let successMessage = false;
 
     async function updateUser() {
         if (userUpdate.pseudo !== user.pseudo || userUpdate.email !== user.email) {
-            alert("Exécution de la modification de pseudo ou d'email");
 
             userUpdate.type = "update-info";
 
@@ -36,7 +36,9 @@
             });
 
             if (response.ok) {
-                alert("Informations mises à jour avec succès");
+
+                successMessage = true;
+
                 userUpdate.type = "";
                 isEditingInfo = false;
 
@@ -50,7 +52,7 @@
                 if (errorMessage.message === "Email already exists") {
                     isSameEmail = true;
                 } else {
-                    alert(errorMessage.message);
+                    successMessage = false;
                 }
             }
         } else {
@@ -75,7 +77,9 @@
         });
 
         if (response.ok) {
-            alert("Mot de passe mis à jour avec succès");
+            
+            successMessage = true;
+
             userUpdate.type = "";
             isEditingPassword = false;
             refreshForm();
@@ -85,7 +89,7 @@
             if (errorMessage.message === "Mot de passe actuel incorrect.") {
                 isNotActualPassword = true;
             } else {
-                alert(errorMessage.message);
+                successMessage = false;
             }
         }
     }
@@ -113,6 +117,10 @@
             <h1 class="text-3xl font-bold text-center my-8">Bienvenue, {user.pseudo}</h1>
 
             <section class="account-information max-w-md mx-auto p-4 border rounded-lg shadow-md">
+                {#if successMessage}
+                    <p class="text-green-600 font-semibold mb-4">Informations misent a jour avec succes</p>
+                {/if}
+
                 <!-- Affichage des informations utilisateur -->
                 {#if !isEditingInfo && !isEditingPassword}
                     <h2 class="text-xl font-semibold mb-4">Informations personnelles</h2>
@@ -121,8 +129,8 @@
                     <p><strong>Email :</strong> {user.email}</p>
 
                     <div class="mt-4 flex space-x-4">
-                        <button class="p-2 bg-blue-600 text-white font-bold rounded" on:click={() => isEditingInfo = true}>Modifier les informations</button>
-                        <button class="p-2 bg-blue-600 text-white font-bold rounded" on:click={() => isEditingPassword = true}>Modifier le mot de passe</button>
+                        <button class="p-2 bg-blue-600 text-white font-bold rounded" on:click={() => {isEditingInfo = true, successMessage = false}}>Modifier les informations</button>
+                        <button class="p-2 bg-blue-600 text-white font-bold rounded" on:click={() => {isEditingPassword = true, successMessage = false}}>Modifier le mot de passe</button>
                     </div>
 
                 {/if}
