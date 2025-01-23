@@ -218,6 +218,16 @@
                 selectedDate.getDate();
 
             eventMenuHeader.innerHTML = `<h1>${headerTitle} events</h1>`;
+
+            // Display date one date field create event
+            const startDateEvent = document.getElementById("event-start-date")
+            const endDateEvent = document.getElementById("event-end-date")
+
+            let formatedSelDate = $selDate.toLocaleDateString('en-US').split("/");
+            formatedSelDate = `${formatedSelDate[2]}-${('0'+formatedSelDate[0]).slice(-2)}-${('0'+formatedSelDate[1]).slice(-2)}`;
+
+            startDateEvent.value = formatedSelDate;
+            endDateEvent.value = formatedSelDate;
         }
 
         // // Update elements on start
