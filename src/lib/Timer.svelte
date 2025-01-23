@@ -66,7 +66,7 @@
             notification.set({
                 show: true,
                 message: 'Timer Completed!',
-                type: 'timer'
+                type: 'timer',
             });
         }
     }

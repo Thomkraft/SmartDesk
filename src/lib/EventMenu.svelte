@@ -1,9 +1,25 @@
 <script>
-    import { selDate, calendarData } from "./store.js";
+    import {selDate, calendarData, notification} from "./store.js";
     import { getMonthName } from "./date-helpers.js";
     import Event from "$lib/Event.svelte";
-    import {onMount} from "svelte";
+    import ArrowLeftIcon from "$lib/assets/icons/arrow_left_icon.svg";
+    import Notification from "$lib/Notification.svelte";
 
+
+    let eventMenu;
+
+    let eventMenuContainer;
+    let createEventContainer;
+    let createEventForm;
+    let createEventBtn;
+
+    let titleEvent;
+    let startDateEvent
+    let endDateEvent;
+    let startTimeEvent;
+    let endTimeEvent;
+    let descriptionEvent;
+    
 
     // Initialize selected date
     const selectedDate = $selDate;
@@ -13,31 +29,63 @@
         getMonthName(selectedDate) + " " +
         selectedDate.getDate();
 
-    // Create new event
-    let eventMenuContainer;
-    let createEventContainer;
-    let createEventBtn;
+    // Arrow left function on click
+    const arrowLeftAction = () => {
+        switchMenu("events");
+        eventMenu.classList.add("hidden");
+    }
 
-    let titleEvent;
-    let startDateEvent
-    let endDateEvent;
-    let startTimeEvent;
-    let endTimeEvent;
-    let descriptionEvent;
+    // Switch event menu and create event menu
+    const switchMenu = (type) => {
+        if (type === "events") {
+            createEventContainer.classList.add("hidden");
+            eventMenuContainer.classList.remove("hidden");
+        }
+
+        else if (type === "create") {
+            eventMenuContainer.classList.add("hidden");
+            createEventContainer.classList.remove("hidden");
+        }
+    }
 
     async function registerEvent() {
 
         const currentUserId = localStorage.getItem("id");
 
-        // Control data
-        titleEvent = titleEvent.value;
-        startDateEvent = startDateEvent.value;
-        endDateEvent = endDateEvent.value;
-        startTimeEvent = startTimeEvent.value;
-        endTimeEvent = endTimeEvent.value;
-        descriptionEvent = descriptionEvent.value;
-
         try {
+            if (!titleEvent || !startDateEvent || !endDateEvent || !startTimeEvent || !endTimeEvent || !descriptionEvent) {
+                console.error("One or more input elements are not initialized.");
+                return;
+            }
+
+            // Control data
+            titleEvent = titleEvent.value;
+            startDateEvent = startDateEvent.value;
+            endDateEvent = endDateEvent.value;
+            startTimeEvent = startTimeEvent.value;
+            endTimeEvent = endTimeEvent.value;
+            descriptionEvent = descriptionEvent.value;
+
+            if (titleEvent.length > 20) {
+                notification.set({
+                    show: true,
+                    message: 'Title must not exceed 20 characters',
+                    type: 'alert'
+                });
+
+                throw new Error("Title must not exceed 20 characters")
+            }
+
+            // if (endDateEvent < startDateEvent) {
+            //     notification.set({
+            //         show: true,
+            //         message: 'End date must be greater than start date',
+            //         type: 'alert'
+            //     });
+            //
+            //     throw new Error("End date must be greater than start date")
+            // }
+
             const response = await fetch("/events/", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
@@ -65,7 +113,7 @@
         }
     }
 
-    $: dayIndex = $calendarData.findIndex(day => 
+    $: dayIndex = $calendarData.findIndex(day =>
         day.day === selectedDate.getDate() &&
         day.month === (selectedDate.getMonth() + 1) &&
         day.year === selectedDate.getFullYear()
@@ -73,9 +121,16 @@
 
 </script>
 
-<div id="event-menu" class="hidden max-lg:fixed max-lg:border-l-2 max-lg:border-gray-300 w-full max-w-md h-full right-0 bg-gray-50 transition-all duration-500 ease-out">
-    <div id="event-menu-header" class="text-md text-center border-b-2 border-gray-300 py-3">
-        <h1>{headerTitle} events</h1>
+<div id="event-menu" bind:this={eventMenu} class="hidden max-lg:fixed max-lg:border-l-2 max-lg:border-gray-300 w-full max-w-md h-full right-0 bg-gray-50 transition-all duration-500 ease-out">
+
+    <div id="event-menu-header" class="text-center text-md border-b-2 border-gray-300 py-3">
+        <h1 class="">{headerTitle} events</h1>
+    </div>
+
+    <div class="w-full text-left">
+        <button class="my-2 mx-1" on:click={ arrowLeftAction }>
+            <img class="w-9 p-1 hover:bg-gray-200 rounded-full" src={ArrowLeftIcon} alt="arrow_left" />
+        </button>
     </div>
 
     <div id="event-menu-container" bind:this={eventMenuContainer} class="text-center">
@@ -97,57 +152,58 @@
         <input type="button" id="create-event-btn" bind:this={createEventBtn}
                class="bg-teal-400 text-gray-50 rounded-md text-center my-5 px-3 py-1" value="New Event"
                on:click={() => {
-                    eventMenuContainer.classList.add("hidden");
-                    createEventContainer.classList.remove("hidden");
+                    switchMenu("create");
                }}
         />
     </div>
 
     <div id="create-event-container" bind:this={createEventContainer} class="hidden flex flex-col m-5">
 
-        <input id="event-title-tf" bind:this={titleEvent} type="text" placeholder="Title" class="text-md p-3 bg-gray-300 rounded-t-md outline-none" />
+        <form id="create-event-form" bind:this={createEventForm}>
+            <input id="event-title-tf" bind:this={titleEvent} type="text" placeholder="Title" maxlength="20" required class="text-md w-full p-3 bg-gray-300 rounded-t-md outline-none" />
 
-        <div id="date-selector" class="flex flex-col bg-gray-300 w-full">
-            <label class="flex items-center justify-between px-3">
-                Start date
-                <input id="event-start-date" bind:this={startDateEvent} type="date" class="text-md py-3 items-end bg-gray-300 outline-none" />
-            </label>
-            <label class="flex items-center justify-between px-3">
-                End date
-                <input id="event-end-date" bind:this={endDateEvent} type="date" class="text-md py-3 bg-gray-300 outline-none" />
-            </label>
-        </div>
+            <div id="date-selector" class="flex flex-col bg-gray-300 w-full">
+                <label class="flex items-center justify-between px-3">
+                    Start date
+                    <input id="event-start-date" bind:this={startDateEvent} type="date" required class="text-md py-3 items-end bg-gray-300 outline-none" />
+                </label>
 
-        <div id="time-selector" class="flex flex-col bg-gray-300 w-full">
-            <label class="flex items-center justify-between px-3">
-                Start time
-                <input id="event-start-time" bind:this={startTimeEvent} type="time" class="text-md py-3 items-end bg-gray-300 outline-none" />
-            </label>
-            <label class="flex items-center justify-between px-3">
-                End time
-                <input id="event-end-time" bind:this={endTimeEvent} type="time" class="text-md py-3 bg-gray-300 outline-none" />
-            </label>
-        </div>
+                <label class="flex items-center justify-between px-3">
+                    End date
+                    <input id="event-end-date" bind:this={endDateEvent} type="date" required class="text-md py-3 bg-gray-300 outline-none" />
+                </label>
+            </div>
 
-        <input id="event-desc-tf" bind:this={descriptionEvent} type="text" placeholder="Description" class="text-md p-3 bg-gray-300 rounded-b-md outline-none" />
+            <div id="time-selector" class="flex flex-col bg-gray-300 w-full">
+                <label class="flex items-center justify-between px-3">
+                    Start time
+                    <input id="event-start-time" bind:this={startTimeEvent} type="time" required class="text-md py-3 items-end bg-gray-300 outline-none" />
+                </label>
 
-        <div id="create-event-btn-container" class="flex justify-center space-x-2 my-5">
-            <input
-                    id="cancel-event-btn" type="button" value="Cancel" class="border-[1px] border-black px-3 py-2 rounded-md"
-                    on:click={() => {
-                        createEventContainer.classList.add("hidden");
-                        eventMenuContainer.classList.remove("hidden");
-                    }}
-            />
-            <input
-                    id="create-event-btn" type="button" value="Save" class="text-gray-100 bg-teal-400 px-4 py-2 rounded-md"
-                    on:click={() => {
-                        registerEvent();
-                    }}
-            />
-        </div>
+                <label class="flex items-center justify-between px-3">
+                    End time
+                    <input id="event-end-time" bind:this={endTimeEvent} type="time" required class="text-md py-3 bg-gray-300 outline-none" />
+                </label>
+            </div>
 
+            <input id="event-desc-tf" bind:this={descriptionEvent} type="text" placeholder="Description" maxlength="1000" class="text-md w-full p-3 bg-gray-300 rounded-b-md outline-none" />
+
+            <div id="create-event-btn-container" class="flex justify-center space-x-2 my-5">
+                <input
+                        id="cancel-event-btn" type="button" value="Cancel" class="border-[1px] border-black px-3 py-2 rounded-md"
+                        on:click={() => {
+                            switchMenu("events")
+                        }}
+                />
+                <input
+                        id="save-event-btn" type="submit" value="Save" class="text-gray-100 bg-teal-400 px-4 py-2 rounded-md"
+                        on:submit={registerEvent}
+                />
+            </div>
+        </form>
     </div>
 </div>
+
+<Notification />
 
 
