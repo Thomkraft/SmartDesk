@@ -49,7 +49,6 @@
     }
 
     async function registerEvent() {
-
         const currentUserId = localStorage.getItem("id");
 
         try {
@@ -197,7 +196,7 @@
                 />
                 <input
                         id="save-event-btn" type="submit" value="Save" class="text-gray-100 bg-teal-400 px-4 py-2 rounded-md"
-                        on:submit={registerEvent}
+                        on:click={registerEvent()}
                 />
             </div>
         </form>
