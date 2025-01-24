@@ -40,7 +40,7 @@
 
 <div class="flex-grow flex items-center justify-center min-h-96 h-full bg-gray-100">
     <div class="w-full max-w-md p-8 space-y-6 bg-white rounded shadow-md">
-        <h2 class="text-2xl font-bold text-center">Connexion</h2>
+        <h2 class="text-2xl font-bold text-center">Login</h2>
         {#if rep === 0}
             <p
                 class="bg-green-500 py-2 px-4 rounded text-white mb-4 text-center"
@@ -57,7 +57,7 @@
                 <label
                         for="email"
                         class="block text-sm font-medium text-gray-700"
-                        >Adresse mail</label>
+                        >Email</label>
                 <input
                     class="w-full px-3 py-2 mt-1 border rounded-md focus:outline-none focus:ring focus:ring-indigo-200"
                     type="email"
@@ -70,7 +70,7 @@
                 <label
                         for="password"
                         class="block text-sm font-medium text-gray-700"
-                        >Mot de passe</label>
+                        >Password</label>
                 <input
                     class="w-full px-3 py-2 mt-1 border rounded-md focus:outline-none focus:ring focus:ring-indigo-200"
                     type="password"
@@ -79,11 +79,11 @@
                     required
                 />
             </div>
-            <button type="submit" class="w-full bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">Se connecter</button>
+            <button type="submit" class="w-full bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">Login</button>
         </form>
 
         <button class="w-full bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2" on:click={goto("/page-connection/recovery/")}
-            >Mot de passe oublié</button
+            >Password forgotten</button
         >
     </div>
 

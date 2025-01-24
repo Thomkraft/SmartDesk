@@ -1,9 +1,10 @@
 <script>
-    import {selDate, calendarData, notification} from "./store.js";
+    import { selDate, calendarData, notification, isConnected } from "./store.js";
     import { getMonthName } from "./date-helpers.js";
     import Event from "$lib/Event.svelte";
     import ArrowLeftIcon from "$lib/assets/icons/arrow_left_icon.svg";
     import Notification from "$lib/Notification.svelte";
+    import {goto} from "$app/navigation";
 
 
     let eventMenu;
@@ -151,14 +152,20 @@
         <input type="button" id="create-event-btn" bind:this={createEventBtn}
                class="bg-teal-400 text-gray-50 rounded-md text-center my-5 px-3 py-1" value="New Event"
                on:click={() => {
-                    switchMenu("create");
+                    if ($isConnected) {
+                        switchMenu("create");
+                    }
+                    else {
+                        goto("/page-account");
+                    }
+
                }}
         />
     </div>
 
     <div id="create-event-container" bind:this={createEventContainer} class="hidden flex flex-col m-5">
 
-        <form id="create-event-form" bind:this={createEventForm}>
+        <form id="create-event-form" bind:this={createEventForm} on:submit|preventDefault={registerEvent}>
             <input id="event-title-tf" bind:this={titleEvent} type="text" placeholder="Title" maxlength="20" required class="text-md w-full p-3 bg-gray-300 rounded-t-md outline-none" />
 
             <div id="date-selector" class="flex flex-col bg-gray-300 w-full">
@@ -196,7 +203,6 @@
                 />
                 <input
                         id="save-event-btn" type="submit" value="Save" class="text-gray-100 bg-teal-400 px-4 py-2 rounded-md"
-                        on:click={registerEvent()}
                 />
             </div>
         </form>

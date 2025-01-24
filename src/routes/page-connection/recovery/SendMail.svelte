@@ -23,7 +23,7 @@
 
 <div class="flex-grow flex items-center justify-center min-h-96 h-full bg-gray-100">
     <div class="bg-white p-8 rounded shadow-md w-full max-w-md">
-        <h1 class="text-2xl font-bold mb-6">Récuperation de compte</h1>
+        <h1 class="text-2xl font-bold mb-6">Account recovery</h1>
         {#if rep === 0}
             <p
                 class="bg-green-500 py-2 px-4 rounded text-white mb-4 text-center"
@@ -39,7 +39,7 @@
         <form on:submit|preventDefault={handleSubmit}>
             <div class="mb-4">
                 <label for="email" class="block text-gray-700">
-                    Adresse mail
+                    Email
                 </label>
                 <input
                     type="email"
@@ -52,7 +52,7 @@
             <button
                 type="submit"
                 class="w-full bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                >Continuer
+                >Continue
             </button>
         </form>
     </div>

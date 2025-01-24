@@ -114,23 +114,23 @@
 
         {#if $isConnected === true}
 
-            <h1 class="text-3xl font-bold text-center my-8">Bienvenue, {user.pseudo}</h1>
+            <h1 class="text-3xl font-bold text-center my-8">Welcome, {user.pseudo}</h1>
 
             <section class="account-information max-w-md mx-auto p-4 border rounded-lg shadow-md">
                 {#if successMessage}
-                    <p class="text-green-600 font-semibold mb-4">Informations misent a jour avec succes</p>
+                    <p class="text-green-600 font-semibold mb-4">Successfully updated information</p>
                 {/if}
 
                 <!-- Affichage des informations utilisateur -->
                 {#if !isEditingInfo && !isEditingPassword}
-                    <h2 class="text-xl font-semibold mb-4">Informations personnelles</h2>
+                    <h2 class="text-xl font-semibold mb-4">Personal information</h2>
 
-                    <p><strong>Pseudo :</strong> {user.pseudo}</p>
+                    <p><strong>Username :</strong> {user.pseudo}</p>
                     <p><strong>Email :</strong> {user.email}</p>
 
-                    <div class="mt-4 flex space-x-4">
-                        <button class="p-2 bg-blue-600 text-white font-bold rounded" on:click={() => {isEditingInfo = true, successMessage = false}}>Modifier les informations</button>
-                        <button class="p-2 bg-blue-600 text-white font-bold rounded" on:click={() => {isEditingPassword = true, successMessage = false}}>Modifier le mot de passe</button>
+                    <div class="mt-5 flex space-x-4">
+                        <button class="p-2 bg-blue-600 text-white font-bold rounded" on:click={() => {isEditingInfo = true, successMessage = false}}>Modify information</button>
+                        <button class="p-2 bg-blue-600 text-white font-bold rounded" on:click={() => {isEditingPassword = true, successMessage = false}}>Modify password</button>
                     </div>
 
                 {/if}
@@ -139,25 +139,25 @@
                 {#if isEditingInfo}
                     <form on:submit|preventDefault={updateUser}>
 
-                        <h2 class="text-xl font-semibold mb-4">Modifier les informations personnelles</h2>
+                        <h2 class="text-xl font-semibold mb-4">Modify personal information</h2>
 
                         {#if isSameInfo}
-                            <p class="text-red-600">Vous n'avez pas modifié vos informations</p>
+                            <p class="text-red-600">You have not modified your information</p>
                         {/if}
 
-                        <label for="pseudo" class="block mb-2 font-medium">Pseudo :</label>
+                        <label for="pseudo" class="block mb-2 font-medium">Username :</label>
                         <input type="text" name="pseudo" id="pseudo" bind:value="{userUpdate.pseudo}" class="w-full p-2 border rounded mb-4" required />
 
                         {#if isSameEmail}
-                            <p class="text-red-600">L'email existe déja</p>
+                            <p class="text-red-600">Email already exists</p>
                         {/if}
 
                         <label for="email" class="block mb-2 font-medium">Email :</label>
                         <input type="email" name="email" id="email" bind:value="{userUpdate.email}" class="w-full p-2 border rounded mb-4" required />
 
                         <div class="flex space-x-4">
-                            <button type="submit" class="p-2 bg-blue-600 text-white font-bold rounded">Enregistrer</button>
-                            <button type="button" class="p-2 bg-gray-600 text-white font-bold rounded" on:click={() => {isEditingInfo = false;isSameInfo = false; refreshForm()}}>Annuler</button>
+                            <button type="submit" class="p-2 bg-blue-600 text-white font-bold rounded">Register</button>
+                            <button type="button" class="p-2 bg-gray-600 text-white font-bold rounded" on:click={() => {isEditingInfo = false;isSameInfo = false; refreshForm()}}>Cancel</button>
                         </div>
                     </form>
                 {/if}
@@ -166,29 +166,29 @@
                 {#if isEditingPassword}
                     <form on:submit|preventDefault={updatePassword}>
 
-                        <h2 class="text-xl font-semibold mb-4">Changer de mot de passe</h2>
+                        <h2 class="text-xl font-semibold mb-4">Change password</h2>
 
                         {#if isNotActualPassword}
-                            <p class="text-red-600">Le mot de passe actuel est incorrect</p>
+                            <p class="text-red-600">Current password is incorrect</p>
                             <!-- rajouter un mdp oublié ici ? -->
                         {/if}
 
-                        <label for="current_password" class="block mb-2 font-medium">Mot de passe actuel :</label>
+                        <label for="current_password" class="block mb-2 font-medium">Current password :</label>
                         <input type="password" name="current_password" id="current_password" bind:value="{userUpdate.password}" class="w-full p-2 border rounded mb-4" required />
 
                         {#if isNotSamePassword}
-                            <p class="text-red-600">Les mots de passe ne correspondent pas</p>
+                            <p class="text-red-600">Passwords don't match</p>
                         {/if} 
 
-                        <label for="new_password" class="block mb-2 font-medium">Nouveau mot de passe :</label>
+                        <label for="new_password" class="block mb-2 font-medium">New password :</label>
                         <input type="password" name="new_password" id="new_password" bind:value="{userUpdate.new_password}" class="w-full p-2 border rounded mb-4" required />
 
-                        <label for="confirm_password" class="block mb-2 font-medium">Confirmer le mot de passe :</label>
+                        <label for="confirm_password" class="block mb-2 font-medium">Confirm password :</label>
                         <input type="password" name="confirm_password" id="confirm_password" bind:value="{userUpdate.confirm_password}" class="w-full p-2 border rounded mb-4" required />
 
                         <div class="flex space-x-4">
-                            <button type="submit" class="p-2 bg-blue-600 text-white font-bold rounded">Enregistrer</button>
-                            <button type="button" class="p-2 bg-gray-600 text-white font-bold rounded" on:click={() => {isEditingPassword = false;refreshForm()}}>Annuler</button>
+                            <button type="submit" class="p-2 bg-blue-600 text-white font-bold rounded">Register</button>
+                            <button type="button" class="p-2 bg-gray-600 text-white font-bold rounded" on:click={() => {isEditingPassword = false;refreshForm()}}>Cancel</button>
                         </div>
                     </form>
                 {/if}
@@ -197,12 +197,12 @@
         {:else}
             <div class="flex flex-col items-center h-full">
 
-                <h1 class="text-3xl font-bold text-center my-8">Bienvenue voyageur du futur</h1>
+                <h1 class="text-3xl font-bold text-center my-8">Welcome future traveler</h1>
 
-                <p>Vous n'êtes pas connecté !</p>
-                <p>Pour vous connecter ou vous inscrire, cliquez ici :</p>
+                <p>You are not logged in!</p>
+                <p>To login or register, click here :</p>
 
-                <div class="flex flex-row">
+                <div class="mt-4 flex flex-row space-x-1">
 
                     <button
                         class="text-sm my-1 mx-1 px-3 py-1 rounded bg-teal-500 hover:bg-teal-600 text-white transition duration-200"
