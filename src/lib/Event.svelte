@@ -41,13 +41,26 @@
 
 <div id="event-container" class="text-left m-3 p-5 bg-gray-300 rounded-md">
     <div id="event-header" class="flex items-center justify-between">
-        <h1 class="text-lg font-bold">{title}</h1>
+        <h1 class="text-lg font-bold mb-2">{title}</h1>
         <input
                 id="delete-event-btn" type="button" value="X" class="text-lg px-2 hover:bg-red-700 hover:bg-opacity-20 rounded-full"
                 on:click={deleteEvent}
         />
     </div>
 
-    <h2 class="font-bold">{startDate} - {startTime} > {endDate} - {endTime}</h2>
+    <div class="flex items-center mb-2 space-x-9">
+        <div>
+            <p class="font-bold mb-1">{startDate}</p>
+            <p class="text-lg font-bold mb-1">{startTime}</p>
+        </div>
+
+        <p class="font-bold">></p>
+
+        <div>
+            <p class="font-bold mb-1">{endDate}</p>
+            <p class="text-lg font-bold mb-1">{endTime}</p>
+        </div>
+    </div>
+
     <p>{description}</p>
 </div>
