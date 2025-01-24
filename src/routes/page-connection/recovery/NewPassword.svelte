@@ -35,7 +35,7 @@
 
 <div class="flex-grow flex items-center justify-center min-h-96 h-full bg-gray-100">
     <div class="w-full max-w-md p-8 space-y-6 bg-white rounded shadow-md">
-        <h2 class="text-2xl font-bold text-center">Nouveau mot de passe</h2>
+        <h2 class="text-2xl font-bold text-center">New username</h2>
         {#if rep === 0}
             <p class="bg-green-500 py-2 px-4 rounded text-white mb-4 text-center">{repbody.message}</p>
         {:else if rep === 1}
@@ -46,7 +46,7 @@
                 <label
                     for="password"
                     class="block text-sm font-medium text-gray-700"
-                    >Nouveau mot de passe</label>
+                    >New username</label>
                 <input
                     type="password"
                     id="password"
@@ -58,7 +58,7 @@
                 <label
                     for="confirmPassword"
                     class="block text-sm font-medium text-gray-700"
-                    >Confirmer le mot de passe</label>
+                    >Confirm password</label>
                 <input
                     type="password"
                     id="confirmPassword"
@@ -69,7 +69,7 @@
             <button
                 type="submit"
                 class="w-full px-4 py-2 font-bold text-white bg-indigo-600 rounded hover:bg-indigo-700 focus:outline-none focus:ring focus:ring-indigo-200"
-                >Envoyer</button>
+                >Send</button>
         </form>
     </div>
 </div>
