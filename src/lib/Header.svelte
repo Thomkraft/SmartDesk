@@ -165,7 +165,7 @@
         if (confirm("Etes vous sur de vouloir vous déconnecter ?")) {
             clearAllData();
             isConnected.set(false);
-            goto('/');
+            window.location.reload();
         }
     }
 </script>
@@ -207,7 +207,7 @@
                     class="text-sm px-3 py-1 rounded bg-teal-500 hover:bg-teal-600 text-white transition duration-200"
                     on:click={disconectionVerif}
                 >
-                    Se déconnecter
+                    Disconnect
                 </button>
             {:else}
                 <button

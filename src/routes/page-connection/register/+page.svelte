@@ -40,7 +40,7 @@
 
 <div class="flex-grow flex items-center justify-center min-h-96 h-full bg-gray-100">
     <div class="w-full max-w-md p-8 space-y-6 bg-white rounded shadow-md">
-        <h2 class="text-2xl font-bold text-center">Inscription</h2>
+        <h2 class="text-2xl font-bold text-center">Sign in</h2>
         {#if rep === 0}
             <p
                 class="bg-green-500 py-2 px-4 rounded text-white mb-4 text-center"
@@ -57,7 +57,7 @@
                 <label
                     for="username"
                     class="block text-sm font-medium text-gray-700"
-                    >Nom d'utilisateur</label
+                    >Username</label
                 >
                 <input
                     type="text"
@@ -85,7 +85,7 @@
                 <label
                     for="password"
                     class="block text-sm font-medium text-gray-700"
-                    >Mot de passe</label
+                    >Password</label
                 >
                 <input
                     type="password"
@@ -98,7 +98,7 @@
             <button
                 type="submit"
                 class="w-full px-4 py-2 font-bold text-white bg-red-600 rounded hover:bg-red-700 focus:outline-none focus:ring focus:ring-indigo-200"
-                >S'inscrire</button
+                >Sign in</button
             >
         </form>
     </div>
