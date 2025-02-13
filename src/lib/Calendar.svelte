@@ -19,6 +19,10 @@
     let todayDate = $toDate;
     let selectedDate = $selDate;
 
+    // General properties
+    const windowWidthMax = 766;
+    let eventMenuHeaderTitle;
+
     onMount(() => {
         // Update data of the calendar
         $calendarData = generateCalendarData(todayDate);
@@ -176,7 +180,8 @@
             allDays.forEach((dayElement, index) => {
                 dayElement.addEventListener("click", () => {
                     // Open event menu on second click
-                    if ($calendarData[index].selected) {
+                    console.log(window.innerWidth)
+                    if ($calendarData[index].selected && window.innerWidth < windowWidthMax) {
 
                         toggleEventMenu();
 
@@ -213,11 +218,11 @@
         function updateEventMenu() {
             // Display date on event menu header
             const eventMenuHeader = document.getElementById("event-menu-header");
-            const headerTitle =
+            eventMenuHeaderTitle =
                 getMonthName(selectedDate) + " " +
                 selectedDate.getDate();
 
-            eventMenuHeader.innerHTML = `<h1>${headerTitle} events</h1>`;
+            //eventMenuHeader.innerHTML = `<h1>${headerTitle} events</h1>`;
 
             // Display date one date field create event
             const startDateEvent = document.getElementById("event-start-date")
@@ -236,19 +241,17 @@
 </script>
 
 <div class="bg-gray-50 w-full h-full flex flex-col">
-    <div id="calendar-header" class="">
-        <div id="calendar-nav" class="grid grid-cols-7 max-md:flex max-md:justify-between items-center max-md:px-10 py-4 pb-2">
+    <div id="calendar-header" class="border-r-2 border-gray-300">
+        <div id="calendar-nav" class="flex justify-between items-center px-10 py-4 pb-2">
 
-            <div class="col-start-1 text-center">
-
+            <div class="col-span-1 text-center">
                 <input type="button" id="today-month"
                        class="border border-gray-800 rounded-md text-left px-3 py-1" value="Today"/>
-
             </div>
 
-            <p id="lab-month" class="col-start-3 col-end-6 text-center">Month</p>
+            <p id="lab-month" class="col-span-1 text-center">Month</p>
 
-            <div class="col-start-7 text-center">
+            <div class="col-span-1 text-center">
 
                 <input type="button" id="prev-month" value="<"
                        class="border border-gray-800 rounded-md px-3 py-1"/>
@@ -267,7 +270,7 @@
 
 </div>
 
-<EventMenu bind:this={eventMenuComponent} />
+<EventMenu bind:this={eventMenuComponent} bind:headerTitle={eventMenuHeaderTitle} />
 
 
 

@@ -5,6 +5,7 @@
     import ArrowLeftIcon from "$lib/assets/icons/arrow_left_icon.svg";
     import Notification from "$lib/Notification.svelte";
     import {goto} from "$app/navigation";
+    import {toggleEventMenu} from "$lib/calendar-animation.js";
 
 
     let eventMenu;
@@ -26,14 +27,14 @@
     const selectedDate = $selDate;
 
     // Initialize header title
-    const headerTitle =
+    export let headerTitle =
         getMonthName(selectedDate) + " " +
         selectedDate.getDate();
 
     // Arrow left function on click
     const arrowLeftAction = () => {
+        toggleEventMenu()
         switchMenu("events");
-        eventMenu.classList.add("hidden");
     }
 
     // Switch event menu and create event menu
@@ -121,17 +122,18 @@
 
 </script>
 
-<div id="event-menu" bind:this={eventMenu} class="hidden max-lg:fixed max-lg:border-l-2 max-lg:border-gray-300 w-full max-w-md h-full right-0 bg-gray-50 transition-all duration-500 ease-out">
+<div id="event-menu" bind:this={eventMenu} class="max-md:hidden max-md:fixed max-md:border-l-2 max-md:border-gray-300 w-full max-w-md h-full right-0 bg-gray-50 transition-all duration-500 ease-out">
 
-    <div id="event-menu-header" class="text-center text-md border-b-2 border-gray-300 py-3">
-        <h1 class="">{headerTitle} events</h1>
+    <div id="event-menu-header" class="max-md:grid grid-cols-3 text-md border-b-2 border-gray-300 py-3">
+        <div class="md:hidden text-left">
+            <button class="flex items-center" on:click={ arrowLeftAction }>
+                <img class="w-8 p-1 mx-1 hover:bg-gray-200 rounded-full" src={ArrowLeftIcon} alt="arrow_left" />
+            </button>
+        </div>
+
+        <h1 class="flex justify-center items-center">{headerTitle} events</h1>
     </div>
 
-    <div class="w-full text-left">
-        <button class="my-2 mx-1" on:click={ arrowLeftAction }>
-            <img class="w-9 p-1 hover:bg-gray-200 rounded-full" src={ArrowLeftIcon} alt="arrow_left" />
-        </button>
-    </div>
 
     <div id="event-menu-container" bind:this={eventMenuContainer} class="text-center">
 
