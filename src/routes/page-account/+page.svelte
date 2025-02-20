@@ -23,8 +23,16 @@
     let isNotSamePassword = false;
     let isNotActualPassword = false;
     let successMessage = false;
+    let isSamePseudo = false;
+    let isWrongPassword = false;
 
     async function updateUser() {
+
+        isSameInfo = false;
+        isSameEmail = false;
+        isSamePseudo = false;
+        isWrongPassword = false;
+
         if (userUpdate.pseudo !== user.pseudo || userUpdate.email !== user.email) {
 
             userUpdate.type = "update-info";
@@ -45,12 +53,18 @@
                 saveUserData(userUpdate.email, userUpdate.pseudo, userUpdate.id);
                 user = getUserData();
 
+                refreshForm();
+
 
             } else {
                 const errorMessage = await response.json();
 
                 if (errorMessage.message === "Email already exists") {
                     isSameEmail = true;
+                } else if (errorMessage.message === "Pseudo already exists") {
+                    isSamePseudo = true;
+                } else if (errorMessage.message === "Wrong password") {
+                    isWrongPassword = true;
                 } else {
                     successMessage = false;
                 }
@@ -61,6 +75,10 @@
     }
 
     async function updatePassword() {
+
+        isNotSamePassword = false;
+        isNotActualPassword = false;
+
         if (userUpdate.new_password !== userUpdate.confirm_password) {
             isNotSamePassword = true;
             return;
@@ -105,6 +123,8 @@
         isSameEmail = false;
         isNotSamePassword = false;
         isNotActualPassword = false;
+        isWrongPassword = false;
+        isSamePseudo = false;
     }
 
 </script>
@@ -137,29 +157,52 @@
 
                 <!-- Formulaire de modification des informations utilisateur -->
                 {#if isEditingInfo}
-                    <form on:submit|preventDefault={updateUser}>
-
-                        <h2 class="text-xl font-semibold mb-4">Modify personal information</h2>
-
+                    <form on:submit|preventDefault={updateUser} class="mt-4">
+                        <h2 class="text-xl font-semibold mb-4 text-gray-700">Modify Personal Information</h2>
+                    
                         {#if isSameInfo}
                             <p class="text-red-600">You have not modified your information</p>
                         {/if}
+                    
+                        <label class="block mb-2 font-medium">Username:
+                            <input type="text" bind:value="{userUpdate.pseudo}" 
+                                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" required />
+                        </label>
 
-                        <label for="pseudo" class="block mb-2 font-medium">Username :</label>
-                        <input type="text" name="pseudo" id="pseudo" bind:value="{userUpdate.pseudo}" class="w-full p-2 border rounded mb-4" required />
-
+                        {#if isSamePseudo}
+                            <p class="text-red-600">Pseudo already taken</p>
+                        {/if}
+                    
+                        <label class="block mt-4 mb-2 font-medium">Email:
+                            <input type="email" bind:value="{userUpdate.email}" 
+                                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" required />
+                        </label>
                         {#if isSameEmail}
                             <p class="text-red-600">Email already exists</p>
                         {/if}
+                    
+                        <label class="block mt-4 mb-2 font-medium">Enter your current password:
+                            <input type="password" bind:value="{userUpdate.password}" 
+                                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" required />
+                        </label>
 
-                        <label for="email" class="block mb-2 font-medium">Email :</label>
-                        <input type="email" name="email" id="email" bind:value="{userUpdate.email}" class="w-full p-2 border rounded mb-4" required />
-
-                        <div class="flex space-x-4">
-                            <button type="submit" class="p-2 bg-blue-600 text-white font-bold rounded">Register</button>
-                            <button type="button" class="p-2 bg-gray-600 text-white font-bold rounded" on:click={() => {isEditingInfo = false;isSameInfo = false; refreshForm()}}>Cancel</button>
+                        {#if isWrongPassword}
+                            <p class="text-red-600">Incorrect password</p>
+                        {/if}
+                    
+                        <div class="mt-5 flex space-x-4">
+                            <button type="submit" 
+                                    class="px-4 py-2 bg-green-600 text-white font-bold rounded-lg hover:bg-green-700 transition duration-200">
+                                Save
+                            </button>
+                            <button type="button" 
+                                    class="px-4 py-2 bg-gray-500 text-white font-bold rounded-lg hover:bg-gray-600 transition duration-200" 
+                                    on:click={() => {isEditingInfo = false; isSameInfo = false; isWrongPassword = false; refreshForm()}}>
+                                Cancel
+                            </button>
                         </div>
                     </form>
+                
                 {/if}
 
                 <!-- Formulaire de modification du mot de passe -->
