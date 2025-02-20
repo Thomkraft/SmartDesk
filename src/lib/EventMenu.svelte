@@ -122,7 +122,7 @@
 
 </script>
 
-<div id="event-menu" bind:this={eventMenu} class="max-md:hidden max-md:fixed max-md:border-l-2 max-md:border-gray-300 w-full max-w-md h-full right-0 bg-gray-50 transition-all duration-500 ease-out">
+<div id="event-menu" bind:this={eventMenu} class="max-md:hidden max-md:fixed border-l-2 border-gray-300 w-full max-w-md h-full right-0 bg-gray-50 transition-all duration-500 ease-out">
 
     <div id="event-menu-header" class="max-md:grid grid-cols-3 text-md border-b-2 border-gray-300 py-3">
         <div class="md:hidden text-left">
@@ -151,18 +151,23 @@
             {/each}
         {/if}
 
-        <input type="button" id="create-event-btn" bind:this={createEventBtn}
-               class="bg-teal-400 text-gray-50 rounded-md text-center my-5 px-3 py-1" value="New Event"
-               on:click={() => {
+        <button
+                class="mt-5"
+                id="create-event-btn" bind:this={createEventBtn}
+                aria-label="New Event"
+                on:click={() => {
                     if ($isConnected) {
                         switchMenu("create");
                     }
                     else {
                         goto("/page-account");
                     }
-
                }}
-        />
+        >
+            <svg class="fill-gray-50 bg-teal-400 rounded-full w-8 h-8" xmlns="http://www.w3.org/2000/svg" height="300px" viewBox="0 -960 960 960" width="300px">
+                <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/>
+            </svg>
+        </button>
     </div>
 
     <div id="create-event-container" bind:this={createEventContainer} class="hidden flex flex-col m-5">
