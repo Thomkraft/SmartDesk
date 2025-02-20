@@ -22,6 +22,20 @@ export async function POST({ request }) {
             return new Response(JSON.stringify({ message: 'Cet email est déjà utilisé.' }), { status: 400 });
         }
 
+        // Vérifie si le pseudo existe déjà dans la base de données (insensible à la casse)
+        const [existingPseudo] = await db.query(
+            'SELECT nom_utilisateur FROM utilisateur WHERE LOWER(nom_utilisateur) = LOWER(?)',
+            [nom_utilisateur]
+        );
+
+        if (existingPseudo.length > 0) {
+            await db.end();
+            return new Response(
+                JSON.stringify({ message: 'Pseudo already exists' }),
+                { status: 400 }
+            );
+        }
+
         // Hachage du mot de passe
         const hashedPassword = await bcrypt.hash(mdp_utilisateur, 10);
 
