@@ -345,7 +345,7 @@
                                     toggleFabMenu();
                                 }
                             }}
-                            class="bg-{hasTimer ? "gray" : "purple"}-500 hover:bg-{hasTimer ? "gray" : "purple"}-600 text-white w-48 h-12 rounded-full shadow-lg flex items-center justify-center gap-2 transition-colors duration-200"
+                            class="{hasTimer ? "bg-gray-500" : "bg-purple-500"} hover:{hasTimer ? "bg-gray-600" : "bg-purple-600"} text-white w-48 h-12 rounded-full shadow-lg flex items-center justify-center gap-2 transition-colors duration-200"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -361,7 +361,7 @@
                                     toggleFabMenu();
                                 }
                             }}
-                            class="bg-{hasSpotify ? "gray" : "green"}-500 hover:bg-{hasSpotify ? "gray" : "green"}-600 text-white w-48 h-12 rounded-full shadow-lg flex items-center justify-center gap-2 transition-colors duration-200"
+                            class="{hasSpotify ? "bg-gray-500" : "bg-green-500"} hover:{hasSpotify ? "bg-gray-600" : "bg-green-600"} text-white w-48 h-12 rounded-full shadow-lg flex items-center justify-center gap-2 transition-colors duration-200"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />

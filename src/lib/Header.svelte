@@ -1,6 +1,7 @@
 <script>
     import { goto } from "$app/navigation";
     import { onMount } from "svelte";
+    import { page } from "$app/stores";
     import { isConnected, clearAllData, getUserData, saveFavorites, getFavorites as getLocalFavorites } from "$lib/store.js";
     import { getFavorites as getDbFavorites, addFavorite as addDbFavorite, updateFavorite as updateDbFavorite, deleteFavorite as deleteDbFavorite } from "$lib/favoritesService.js";
 
@@ -180,23 +181,23 @@
             <li>
                 <a
                     href="/"
+                    class:text-teal-400={$page.url.pathname === '/'}
                     class="hover:text-teal-400 transition duration-200"
-                >HOME</a
-                >
+                >HOME</a>
             </li>
             <li>
                 <a
                     href="/page-widget"
+                    class:text-teal-400={$page.url.pathname === '/page-widget'}
                     class="hover:text-teal-400 transition duration-200"
-                >WIDGETS</a
-                >
+                >WIDGETS</a>
             </li>
             <li>
                 <a
                     href="/page-account"
+                    class:text-teal-400={$page.url.pathname === '/page-account'}
                     class="hover:text-teal-400 transition duration-200"
-                >ACCOUNT</a
-                >
+                >ACCOUNT</a>
             </li>
         </ul>
 
@@ -206,8 +207,14 @@
                 <button
                     class="text-sm px-3 py-1 rounded bg-teal-400 hover:bg-teal-500 text-white transition duration-200"
                     on:click={disconectionVerif}
+                        class="text-sm py-1 rounded transition duration-200"
+                        aria-label="Disconnect"
+                        on:click={disconectionVerif}
+
                 >
-                    Disconnect
+                    <svg class="fill-gray-50 hover:fill-teal-400" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px">
+                        <path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h280v80H200Zm440-160-55-58 102-102H360v-80h327L585-622l55-58 200 200-200 200Z"/>
+                    </svg>
                 </button>
             {:else}
                 <button
@@ -262,12 +269,12 @@
         {#if contextIndex !== null}
             <button
                 on:click={() => editFavoriteItem(contextIndex)}
-                class="block px-4 py-2 hover:bg-gray-600">Edit
+                class="block w-full text-left px-4 py-2 hover:bg-gray-600">Edit
             </button
             >
             <button
                 on:click={() => deleteFavoriteItem(contextIndex)}
-                class="block px-4 py-2 hover:bg-gray-600 text-red-400"
+                class="block w-full text-left px-4 py-2 hover:bg-gray-600 text-red-400"
             >Delete
             </button
             >
@@ -285,7 +292,7 @@
 <!-- Modals New Favorite -->
 {#if showModal}
     <div
-        class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center"
+        class="fixed inset-0 z-10 bg-gray-800 bg-opacity-75 flex items-center justify-center"
     >
         <div class="bg-white p-4 rounded shadow-md w-96">
             <h2 class="text-lg font-semibold mb-4">Add New Favorite</h2>
@@ -342,7 +349,7 @@
 <!-- Modals Edit Favorite -->
 {#if showEditModal}
     <div
-        class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center"
+        class="fixed inset-0 z-10 bg-gray-800 bg-opacity-75 flex items-center justify-center"
     >
         <div class="bg-white p-4 rounded shadow-md w-96">
             <h2 class="text-lg font-semibold mb-4">Edit Favorite</h2>
