@@ -31,6 +31,49 @@ export async function POST({ request }) {
                     { status: 400 }
                 );
             }
+
+            // Vérifie si le pseudo existe déjà dans la base de données (insensible à la casse)
+            const [existingPseudo] = await db.query(
+                'SELECT nom_utilisateur FROM utilisateur WHERE LOWER(nom_utilisateur) = LOWER(?) AND id_utilisateur != ?',
+                [userData.pseudo, userData.id]
+            );
+
+            if (existingPseudo.length > 0) {
+                await db.end();
+                return new Response(
+                    JSON.stringify({ message: 'Pseudo already exists' }),
+                    { status: 400 }
+                );
+            }
+
+
+
+            // Récupération du mot de passe actuel depuis la base de données
+            const [rows] = await db.query(
+                'SELECT mdp_utilisateur FROM utilisateur WHERE id_utilisateur = ?',
+                [userData.id]
+            );
+
+            if (rows.length === 0) {
+                await db.end();
+                return new Response(
+                    JSON.stringify({ message: 'Utilisateur introuvable.' }),
+                    { status: 404 }
+                );
+            }
+
+            const hashedPassword = rows[0].mdp_utilisateur;
+
+            // Vérifie si le mot de passe actuel est correct
+            const isPasswordValid = await bcrypt.compare(userData.password, hashedPassword);
+
+            if (!isPasswordValid) {
+                await db.end();
+                return new Response(
+                    JSON.stringify({ message: 'Wrong password' }),
+                    { status: 400 }
+                );
+            }
             
 
             // Met à jour les informations utilisateur (pseudo ou email)
