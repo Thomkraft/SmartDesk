@@ -79,7 +79,7 @@
                     required
                 />
             </div>
-            <button type="submit" class="w-full bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">Login</button>
+            <button type="submit" class="w-full bg-teal-400 text-white py-2 px-4 rounded hover:bg-teal-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">Login</button>
         </form>
 
         <button class="w-full bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2" on:click={goto("/page-connection/recovery/")}
