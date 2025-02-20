@@ -289,7 +289,7 @@
 <!-- Modals New Favorite -->
 {#if showModal}
     <div
-        class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center"
+        class="fixed inset-0 z-10 bg-gray-800 bg-opacity-75 flex items-center justify-center"
     >
         <div class="bg-white p-4 rounded shadow-md w-96">
             <h2 class="text-lg font-semibold mb-4">Add New Favorite</h2>
@@ -346,7 +346,7 @@
 <!-- Modals Edit Favorite -->
 {#if showEditModal}
     <div
-        class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center"
+        class="fixed inset-0 z-10 bg-gray-800 bg-opacity-75 flex items-center justify-center"
     >
         <div class="bg-white p-4 rounded shadow-md w-96">
             <h2 class="text-lg font-semibold mb-4">Edit Favorite</h2>
