@@ -241,7 +241,7 @@
         {#each favorites as favorite, index}
             <a
                 href={favorite.lien}
-                class="text-gray-200 hover:text-teal-200 text-sm transition duration-200 px-2 rounded-md hover:bg-gray-600"
+                class="text-gray-200 text-sm transition duration-200 px-2 rounded-md hover:bg-gray-600"
                 on:contextmenu={(e) => openContextMenu(e, index)}
             >
                 {favorite.label}
@@ -249,7 +249,7 @@
         {/each}
         <button
             on:click={openAddFavoriteModal}
-            class="text-gray-200 hover:text-teal-200 transition duration-200 rounded px-1 hover:bg-gray-600"
+            class="text-gray-200 transition duration-200 rounded px-1 hover:bg-gray-600"
         >
             +
         </button>

@@ -292,7 +292,7 @@
                             />
 
                         {:else if widget.type === 'spotify'}
-                            <div class="h-[500px] w-[400px] shadow-[0_-1px_1px_0_rgba(0,255,255,1),1px_0_1px_0_rgba(0,255,255,1)]">
+                            <div class="h-[500px] w-[400px]">
                                 <Spotify
                                     {widget}
                                     onEdit={editWidget}
@@ -388,7 +388,7 @@
                 <!-- FAB Toggle Button -->
                 <button
                     on:click={toggleFabMenu}
-                    class="bg-blue-500 hover:bg-blue-600 w-16 h-16 rounded-full shadow-lg flex items-center justify-center transition-colors duration-200"
+                    class="bg-teal-400 hover:bg-teal-500 w-16 h-16 rounded-full shadow-lg flex items-center justify-center transition-colors duration-200"
                     aria-label="Toggle FAB Menu"
                 >
                     <svg
