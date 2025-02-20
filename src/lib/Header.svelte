@@ -1,6 +1,7 @@
 <script>
     import { goto } from "$app/navigation";
     import { onMount } from "svelte";
+    import { page } from "$app/stores";
     import { isConnected, clearAllData, getUserData, saveFavorites, getFavorites as getLocalFavorites } from "$lib/store.js";
     import { getFavorites as getDbFavorites, addFavorite as addDbFavorite, updateFavorite as updateDbFavorite, deleteFavorite as deleteDbFavorite } from "$lib/favoritesService.js";
 
@@ -180,23 +181,23 @@
             <li>
                 <a
                     href="/"
+                    class:text-teal-400={$page.url.pathname === '/'}
                     class="hover:text-teal-400 transition duration-200"
-                >HOME</a
-                >
+                >HOME</a>
             </li>
             <li>
                 <a
                     href="/page-widget"
+                    class:text-teal-400={$page.url.pathname === '/page-widget'}
                     class="hover:text-teal-400 transition duration-200"
-                >WIDGETS</a
-                >
+                >WIDGETS</a>
             </li>
             <li>
                 <a
                     href="/page-account"
+                    class:text-teal-400={$page.url.pathname === '/page-account'}
                     class="hover:text-teal-400 transition duration-200"
-                >ACCOUNT</a
-                >
+                >ACCOUNT</a>
             </li>
         </ul>
 
