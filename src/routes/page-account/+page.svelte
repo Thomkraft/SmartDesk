@@ -77,7 +77,7 @@
     async function updatePassword() {
 
         isNotSamePassword = false;
-        isNotActualPassword = false;
+        isNotActualPassword = false;    
 
         if (userUpdate.new_password !== userUpdate.confirm_password) {
             isNotSamePassword = true;
@@ -148,9 +148,9 @@
                     <p><strong>Username :</strong> {user.pseudo}</p>
                     <p><strong>Email :</strong> {user.email}</p>
 
-                    <div class="mt-5 flex space-x-4">
-                        <button class="p-2 bg-blue-600 text-white font-bold rounded" on:click={() => {isEditingInfo = true, successMessage = false}}>Modify information</button>
-                        <button class="p-2 bg-blue-600 text-white font-bold rounded" on:click={() => {isEditingPassword = true, successMessage = false}}>Modify password</button>
+                    <div class="mt-5 flex justify-center space-x-4">
+                        <button class="p-2 bg-teal-400 text-white font-bold rounded" on:click={() => {isEditingInfo = true, successMessage = false}}>Modify information</button>
+                        <button class="p-2 bg-teal-400 text-white font-bold rounded" on:click={() => {isEditingPassword = true, successMessage = false}}>Modify password</button>
                     </div>
 
                 {/if}
@@ -190,9 +190,9 @@
                             <p class="text-red-600">Incorrect password</p>
                         {/if}
                     
-                        <div class="mt-5 flex space-x-4">
+                        <div class="mt-5 flex justify-center space-x-4">
                             <button type="submit" 
-                                    class="px-4 py-2 bg-green-600 text-white font-bold rounded-lg hover:bg-green-700 transition duration-200">
+                                    class="px-4 py-2 bg-teal-400 text-white font-bold rounded-lg hover:bg-green-700 transition duration-200">
                                 Save
                             </button>
                             <button type="button" 
@@ -229,8 +229,8 @@
                         <label for="confirm_password" class="block mb-2 font-medium">Confirm password :</label>
                         <input type="password" name="confirm_password" id="confirm_password" bind:value="{userUpdate.confirm_password}" class="w-full p-2 border rounded mb-4" required />
 
-                        <div class="flex space-x-4">
-                            <button type="submit" class="p-2 bg-blue-600 text-white font-bold rounded">Register</button>
+                        <div class="flex justify-center space-x-4">
+                            <button type="submit" class="p-2 bg-teal-400 text-white font-bold rounded">Register</button>
                             <button type="button" class="p-2 bg-gray-600 text-white font-bold rounded" on:click={() => {isEditingPassword = false;refreshForm()}}>Cancel</button>
                         </div>
                     </form>
@@ -248,11 +248,11 @@
                 <div class="mt-4 flex flex-row space-x-1">
 
                     <button
-                        class="text-sm my-1 mx-1 px-3 py-1 rounded bg-teal-500 hover:bg-teal-600 text-white transition duration-200"
+                        class="text-sm my-1 mx-1 px-3 py-1 rounded bg-teal-400 hover:bg-teal-500 text-white transition duration-200"
                         on:click={goto("/page-connection/connection/")}>Login</button>
 
                     <button
-                        class="text-sm my-1 px-3 py-1 rounded bg-teal-500 hover:bg-teal-600 text-white transition duration-200"
+                        class="text-sm my-1 px-3 py-1 rounded bg-teal-400 hover:bg-teal-500 text-white transition duration-200"
                         on:click={goto("/page-connection/register/")}>Sign in</button>
 
                 </div>

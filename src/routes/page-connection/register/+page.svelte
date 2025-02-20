@@ -97,7 +97,7 @@
             </div>
             <button
                 type="submit"
-                class="w-full px-4 py-2 font-bold text-white bg-red-600 rounded hover:bg-red-700 focus:outline-none focus:ring focus:ring-indigo-200"
+                class="w-full px-4 py-2 font-bold text-white bg-teal-400 rounded hover:bg-teal-500 focus:outline-none focus:ring focus:ring-indigo-200"
                 >Sign in</button
             >
         </form>

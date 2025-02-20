@@ -204,14 +204,14 @@
 
             {#if $isConnected}
                 <button
-                    class="text-sm px-3 py-1 rounded bg-teal-500 hover:bg-teal-600 text-white transition duration-200"
+                    class="text-sm px-3 py-1 rounded bg-teal-400 hover:bg-teal-500 text-white transition duration-200"
                     on:click={disconectionVerif}
                 >
                     Disconnect
                 </button>
             {:else}
                 <button
-                    class="text-sm px-3 py-1 rounded bg-teal-500 hover:bg-teal-600 text-white transition duration-200"
+                    class="text-sm px-3 py-1 rounded bg-teal-400 hover:bg-teal-500 text-white transition duration-200"
                     on:click={goToConnection}
                 >
                     Login
@@ -220,7 +220,7 @@
 
             {#if !$isConnected}
                 <button
-                    class="text-sm px-3 py-1 rounded bg-teal-500 hover:bg-teal-600 text-white transition duration-200"
+                    class="text-sm px-3 py-1 rounded bg-teal-400 hover:bg-teal-500 text-white transition duration-200"
                     on:click={goToRegister}
                 >
                     Sign in
