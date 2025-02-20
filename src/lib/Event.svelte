@@ -39,28 +39,27 @@
 
 </script>
 
-<div id="event-container" class="text-left m-3 p-5 bg-gray-300 rounded-md">
-    <div id="event-header" class="flex items-center justify-between">
-        <h1 class="text-lg font-bold mb-2">{title}</h1>
-        <input
-                id="delete-event-btn" type="button" value="X" class="text-lg px-2 hover:bg-red-700 hover:bg-opacity-20 rounded-full"
-                on:click={deleteEvent}
-        />
-    </div>
-
-    <div class="flex items-center mb-2 space-x-9">
+<div id="event-container" class="flex text-left p-4">
+    <div class="flex items-center">
         <div>
-            <p class="font-bold mb-1">{startDate}</p>
-            <p class="text-lg font-bold mb-1">{startTime}</p>
-        </div>
-
-        <p class="font-bold">></p>
-
-        <div>
-            <p class="font-bold mb-1">{endDate}</p>
-            <p class="text-lg font-bold mb-1">{endTime}</p>
+            <!-- <p class="font-bold mb-1">{startDate}</p> -->
+            <p class="font-bold mb-1">{startTime}</p>
+            <p class="font-bold mb-1">{endTime}</p>
         </div>
     </div>
 
-    <p>{description}</p>
+
+    <span class="border-2 border-teal-400 mx-5 my-1 rounded-full"></span>
+
+    <div id="event-main" class="flex flex-col w-full">
+        <div class="flex justify-between">
+            <h1 class="text-lg font-bold">{title}</h1>
+            <input
+                    id="delete-event-btn" type="button" value="X" class="text-lg px-2 hover:bg-red-700 hover:bg-opacity-20 rounded-full"
+                    on:click={deleteEvent}
+            />
+        </div>
+
+        <p>{description}</p>
+    </div>
 </div>

@@ -20,7 +20,7 @@
     let selectedDate = $selDate;
 
     // General properties
-    const windowWidthMax = 766;
+    const windowWidthMax = 770;
     let eventMenuHeaderTitle;
 
     onMount(() => {
@@ -93,7 +93,7 @@
             calendarDaysName.insertAdjacentHTML("beforeend",
                 `<div class="
                     dayName
-                    text-center py-3 font-semibold border-b-2 border-gray-300">
+                    text-center py-3 font-semibold border-b-[1px] border-gray-300">
                     ${dayName}</div>`
             );
         }
@@ -162,12 +162,12 @@
                 calendar.insertAdjacentHTML(
                     "beforeend",
                     `<div class="day ${weekend ? `${currentDay ? 'text-blue-700' : ' text-blue-400'}` : ""}
-                        flex flex-col justify-center text-center border-r-2 border-b-2 border-gray-300 select-none">
+                        flex flex-col justify-center text-center border-[1px] border-gray-300 select-none">
 
                         <div class="${currentDay ? "self-center px-3 py-2 bg-teal-400 rounded-full" : "px-2 py-1"} relative">
                             <p>${dayNumber}</p>
 
-                            ${nbEvents > 0 ? `<span class="${currentDay ? "bg-white" : "bg-teal-500"}
+                            ${nbEvents > 0 ? `<span class="${currentDay ? "bg-white" : "bg-teal-400"}
                             mt-0.5 absolute -translate-x-1/2 w-1.5 h-1.5 rounded-full m-auto"></span>` : ""}
                         </div>
                     </div>`
@@ -241,7 +241,7 @@
 </script>
 
 <div class="bg-gray-50 w-full h-full flex flex-col">
-    <div id="calendar-header" class="border-r-2 border-gray-300">
+    <div id="calendar-header">
         <div id="calendar-nav" class="flex justify-between items-center px-10 py-4 pb-2">
 
             <div class="col-span-1 text-center">
