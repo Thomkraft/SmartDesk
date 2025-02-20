@@ -246,7 +246,7 @@
 
             <div class="col-span-1 text-center">
                 <input type="button" id="today-month"
-                       class="border border-gray-800 rounded-md text-left px-3 py-1" value="Today"/>
+                       class="border border-gray-800 hover:bg-gray-100 rounded-md text-left px-3 py-1" value="Today"/>
             </div>
 
             <p id="lab-month" class="col-span-1 text-center">Month</p>
@@ -254,11 +254,11 @@
             <div class="col-span-1 text-center">
 
                 <input type="button" id="prev-month" value="<"
-                       class="border border-gray-800 rounded-md px-3 py-1"/>
+                       class="border border-gray-800 hover:bg-gray-100 rounded-md px-3 py-1"/>
 
 
                 <input type="button" id="next-month" value=">"
-                       class="border border-gray-800 rounded-md px-3 py-1"/>
+                       class="border border-gray-800 hover:bg-gray-100 rounded-md px-3 py-1"/>
 
             </div>
         </div>

@@ -26,7 +26,7 @@
 </script>
 
 <div
-    class="h-[500px] w-[400px] bg-gray-800 shadow-[0_-1px_1px_0_rgba(0,255,255,1),1px_0_1px_0_rgba(0,255,255,1)] flex flex-col"
+    class="h-[500px] w-[400px] bg-gray-800  flex flex-col"
     on:contextmenu|preventDefault={(event) => onContextMenu(event)}
     role="region"
 >
