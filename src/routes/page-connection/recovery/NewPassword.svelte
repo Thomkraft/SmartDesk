@@ -35,7 +35,7 @@
 
 <div class="flex-grow flex items-center justify-center min-h-96 h-full bg-gray-100">
     <div class="w-full max-w-md p-8 space-y-6 bg-white rounded shadow-md">
-        <h2 class="text-2xl font-bold text-center">New username</h2>
+        <h2 class="text-2xl font-bold text-center">New password</h2>
         {#if rep === 0}
             <p class="bg-green-500 py-2 px-4 rounded text-white mb-4 text-center">{repbody.message}</p>
         {:else if rep === 1}
@@ -46,7 +46,7 @@
                 <label
                     for="password"
                     class="block text-sm font-medium text-gray-700"
-                    >New username</label>
+                    >New password</label>
                 <input
                     type="password"
                     id="password"
