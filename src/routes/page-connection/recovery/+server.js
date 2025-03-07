@@ -73,8 +73,8 @@ export async function POST({ request }) {
                 let transporter = createTransport({
                     service: 'gmail',
                     auth: {
-                        user: 'tiakin69@gmail.com',
-                        pass: 'ypfb lxpw hzds bnsj'
+                        user: 'user@gmail.com',
+                        pass: 'pass'
                     }
                 });
 
