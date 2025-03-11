@@ -15,7 +15,7 @@ export async function POST({ request }) {
 
         // Create connection to database
         const con = await mysql.createConnection({
-            host: '85.215.130.37',
+            host: 'localhost',
             user: 'SAE2',
             password: 'Zao@67.pomme',
             database: 'smartdesk',

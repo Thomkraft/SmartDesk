@@ -2,7 +2,7 @@ import mysql from 'mysql2/promise';
 import { json } from '@sveltejs/kit';
 
 const dbConfig = {
-    host: '85.215.130.37',
+    host: 'localhost',
     user: 'SAE2',
     password: 'Zao@67.pomme',
     database: 'smartdesk',

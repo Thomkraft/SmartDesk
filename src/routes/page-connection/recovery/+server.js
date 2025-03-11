@@ -8,7 +8,7 @@ export async function POST({ request }) {
     const { email, token, password } = await request.json();
 
     const db = await mysql.createConnection({
-        host: '85.215.130.37',
+        host: 'localhost',
         user: 'SAE2',
         password: 'Zao@67.pomme',
         database: 'smartdesk',

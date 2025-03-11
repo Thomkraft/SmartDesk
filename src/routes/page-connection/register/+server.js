@@ -8,7 +8,7 @@ export async function POST({ request }) {
         
         // Connexion à la base de données
         const db = await mysql.createConnection({
-            host: '85.215.130.37',
+            host: 'localhost',
             user: 'SAE2',
             password: 'Zao@67.pomme', 
             database: 'smartdesk',    
