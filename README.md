@@ -2,6 +2,10 @@
 
 This project is a modern **interactive calendar application** built with **Svelte**. It offers a dynamic and modular interface, allowing users to manage events and display various **custom widgets** such as calc, notes, timer, or spotify.
 
+## Website
+
+You can acces to our website thanks to this URL : **
+
 ## 🚀 Technologies Used
 
 - 🌐 Frontend Framework: [Svelte](https://svelte.dev/)
@@ -17,7 +21,7 @@ This project is a modern **interactive calendar application** built with **Svelt
 ## 📦 Project Setup
 
 ```bash
-git clone https://github.com/your-username/interactive-calendar.git
+git clone https://github.com/Thomkraft/SmartDesk.git
 cd interactive-calendar
 npm install
 npm run dev
@@ -39,13 +43,3 @@ This app is entirely built using Svelte and follows a modular component architec
 - Use of Svelte transitions and animations
 - Dynamic rendering of user-configurable content (widgets)
 
-## 📁 Project Structure
-```
-src/
-├── components/        # Reusable Svelte components
-├── widgets/           # All calendar widgets (e.g. weather, tasks, etc.)
-├── routes/            # Page routes
-├── stores/            # Centralized state management
-├── assets/            # Static files and icons
-└── App.svelte         # Main application entry
-```
