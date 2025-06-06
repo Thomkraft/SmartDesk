@@ -4,7 +4,7 @@ This project is a modern **interactive calendar application** built with **Svelt
 
 ## Website
 
-You can acces to our website thanks to this URL : **
+You can acces to our website thanks to this URL : **85.215.130.37/**
 
 ## 🚀 Technologies Used
 
